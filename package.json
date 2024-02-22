@@ -1,0 +1,20 @@
+{
+  "name": "read-freak",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "sangam999",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sangam999/Read-Freak.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sangam999/Read-Freak/issues"
+  },
+  "homepage": "https://github.com/sangam999/Read-Freak#readme",
+  "description": ""
+}
