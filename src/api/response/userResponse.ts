@@ -1,19 +1,19 @@
 import mongoose from "mongoose";
 
 export default class userResponse {
-    _id?: mongoose.Types.ObjectId;
+    _id?:string;
     username: string;
     email: string;
     password?: number;
-    role?: mongoose.Types.ObjectId[];
+    role?:["user,admin"];
 
 
     constructor(
         username: string,
         email: string,
-        _id?: mongoose.Types.ObjectId,
+        _id?:string,
         password?: number,
-        role?: mongoose.Types.ObjectId[],
+        role?: ["user,admin"],
 
 
     ) {

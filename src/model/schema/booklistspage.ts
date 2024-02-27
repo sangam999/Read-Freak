@@ -1,21 +1,25 @@
-const { Schema, model } = require("mongoose");
+import IBooklistsPage from "../../interfaces/IBooklistsPage";
 
-const homepageSchema = new Schema(
+
+const { Schema, model } = require("mongoose");
+import mongoose, { Model } from "mongoose";
+
+const booksSchema = new Schema(
     {
-        banner : {
-            type: Text,
+        book_id : {
+            type: String,
             required: true,
         },
         tittle :{
             type: String,
             requried: true
         },
-        Img : {
+        summary : {
             type : String,
             required : true
         },
 
-        summary: {
+        genre: {
             type: String,
             required: true,
         },
@@ -23,16 +27,15 @@ const homepageSchema = new Schema(
             type: String,
             required: true,
         },
-        ratings: {
+        review: {
             type: String,
             required: true,
         },
-        reviews: {
+        date: {
             type: Number,
             required: true,
-        },
-        recommendations: {
-            type : String,
-            required : true,
         }
     },)
+const booklistsModel: Model<IBooklistsPage> = mongoose.model<IBooklistsPage>('booklists', booksSchema);
+
+export default booklistsModel;

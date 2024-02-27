@@ -1,3 +1,7 @@
+
+import mongoose, { Model } from "mongoose";
+import IUser from "../../interfaces/IUser";
+
 const { Schema, model } = require("mongoose");
 
 const userSchema = new Schema(
@@ -12,10 +16,12 @@ const userSchema = new Schema(
         },
         role: {
             type: String,
-            enum: ["user", "admin"],
         },
         password: {
             type: String,
             required: true,
         },
     },)
+const userSchemaModel: Model<IUser> = mongoose.model<IUser>('user', userSchema);
+
+export default userSchemaModel;

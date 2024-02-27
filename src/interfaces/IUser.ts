@@ -1,9 +1,8 @@
-import mongoose from "mongoose";
 
-export default interface User {
+export default interface IUser {
     username: string;
     email: string;
     password: number;
-    role:mongoose.Types.ObjectId[];
+    role:["user,admin"];
 
 }

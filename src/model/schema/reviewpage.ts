@@ -1,34 +1,42 @@
+
+import mongoose, { Model } from "mongoose";
+import Ireviewpage from "../../interfaces/Ireviewpage";
+
+
 const { Schema, model } = require("mongoose");
 
-const booksSchema = new Schema(
+const reviewSchema = new Schema(
     {
-        book_id : {
+        review_id : {
             type: String,
             required: true,
         },
-        tittle :{
+        book_id :{
             type: String,
             requried: true
         },
-        summary : {
+        user_id : {
             type : String,
             required : true
         },
 
-        genre: {
+        rating: {
             type: String,
             required: true,
         },
-        author: {
+        review_text: {
             type: String,
             required: true,
         },
-        review: {
+        review_by: {
             type: String,
             required: true,
         },
-        date: {
+        review_date: {
             type: Number,
             required: true,
         }
     },)
+const reviewpageModel: Model<Ireviewpage> = mongoose.model<Ireviewpage>('review',reviewSchema);
+
+export default reviewpageModel;
