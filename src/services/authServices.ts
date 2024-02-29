@@ -13,6 +13,7 @@ export class authService{
         try {
             // @ts-ignore
             let user = await UserModel.findOne({  email  });
+            // @ts-ignore
             if(!user || !await bcrypt.compare(password, user.password))
             {
                 throw new Error("user not registered")

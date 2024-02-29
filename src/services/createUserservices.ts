@@ -2,7 +2,13 @@ import User from '../interfaces/IUser';
 import createuserSchema from'../model/schema/userSchema';
 import bcrypt from "bcrypt"
 import  userResponse  from '../api/response/userResponse';
-class createUserService {
+import userSchema from "../model/schema/userSchema";
+
+
+
+
+class createUserservices {
+
     public static(user: User): userResponse {
         return new userResponse(user.username, user.email);
     }
@@ -15,12 +21,18 @@ class createUserService {
         }
         let hashedPassword;
         try {
+
             // @ts-ignore
-            hashedPassword = await bcrypt.hash(password, String, 10);
+            hashedPassword = bcrypt.hash(password,10);
         } catch (error) {
             console.error(error)
             throw new Error('Failed to hash password')
         }
-
+        const newUser = new userSchema({ username, email , password: hashedPassword });
+        await newUser.save();
+        return newUser;
     }
+
+
 }
+export default createUserservices;
