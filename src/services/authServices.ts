@@ -1,48 +1,43 @@
-import config from "../config/config";
-import User from "../interfaces/IUser";
-import UserModel from "mongoose";
-import jwt from "jsonwebtoken";
+import { User, users, UserRole } from "./User";
 import bcrypt from "bcrypt";
-import mongoose from "mongoose";
-import IUser from "../interfaces/IUser";
+import jwt from "jsonwebtoken";
 
+const JWT_SECRET = "your-secret-key";
 
-export class authService{
-    static login = async (email: string, password: number):Promise<{ user: IUser; token: string }> =>
-    {
-        try {
-            // @ts-ignore
-            let user = await UserModel.findOne({  email  });
-            // @ts-ignore
-            if(!user || !await bcrypt.compare(password, user.password))
-            {
-                throw new Error("user not registered")
-            }
-            const token = this.generateToken(user);
-            user = user.toObject();
-            Reflect.deleteProperty(user, 'password');
-            return {user, token};
-
-        } catch (error) {
-            console.log(`Error in Auth Service ${error}`);
-            throw error;
-
-        }
-    }
-    private static generateToken = (user: User) :string=> {
-        const {JWT_KEY} = config ;
-        if (!JWT_KEY) {
-            throw new Error("JWT secret key not found in config");
-        }
-        const payload = {
-            email: user.email,
-            user_id:user.username,
+export class AuthService {
+    static async signUp(username: string, password: string, role: UserRole): Promise<User> {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user: User = {
+            id: String(users.length + 1),
+            username,
+            password: hashedPassword,
+            role
         };
-        let Token = jwt.sign(payload, JWT_KEY!, {
-            expiresIn: "1h",
-        });
-        return Token;
-
+        users.push(user);
+        return user;
     }
 
+    static async login(username: string, password: string): Promise<string | null> {
+        const user = users.find(user => user.username === username);
+        if (!user) {
+            return null; // User not found
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+            return null; // Incorrect password
+        }
+
+        const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
+        return token;
+    }
+
+    static async verifyToken(token: string): Promise<{ userId: string, role: UserRole } | null> {
+        try {
+            const decodedToken = jwt.verify(token, JWT_SECRET) as { userId: string, role: UserRole };
+            return decodedToken;
+        } catch (error) {
+            return null;
+        }
+    }
 }

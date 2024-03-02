@@ -1,38 +1,42 @@
-import User from '../interfaces/IUser';
-import createuserSchema from'../model/schema/userSchema';
-import bcrypt from "bcrypt"
-import  userResponse  from '../api/response/userResponse';
-import userSchema from "../model/schema/userSchema";
+import { User, users } from "./User";
+import bcrypt from "bcrypt";
 
+export class UserService {
+    static async createUser(username: string, password: string, email: string): Promise<User> {
+        // Check if the username or email is already taken
+        if (users.some(user => user.username === username)) {
+            throw new Error("Username is already taken");
+        }
+        if (users.some(user => user.email === email)) {
+            throw new Error("Email is already registered");
+        }
 
+        // Hash the password before saving it
+        const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Create a new user object
+        const user: User = {
+            id: String(users.length + 1),
+            username,
+            password: hashedPassword,
+            email
+        };
 
-class createUserservices {
+        // Save the user to the list of users
+        users.push(user);
 
-    public static(user: User): userResponse {
-        return new userResponse(user.username, user.email);
+        return user;
     }
 
-    async createUser(userdata: User) {
-        const {username, email, password, role: user} = userdata;
-        const existingUser = await createuserSchema.findOne({$or: [{username}, {email}]});
-        if (existingUser) {
-            throw new Error('user already exist');
-        }
-        let hashedPassword;
-        try {
-
-            // @ts-ignore
-            hashedPassword = bcrypt.hash(password,10);
-        } catch (error) {
-            console.error(error)
-            throw new Error('Failed to hash password')
-        }
-        const newUser = new userSchema({ username, email , password: hashedPassword });
-        await newUser.save();
-        return newUser;
+    static getUserById(id: string): User | undefined {
+        return users.find(user => user.id === id);
     }
 
+    static getUserByUsername(username: string): User | undefined {
+        return users.find(user => user.username === username);
+    }
 
+    static getUserByEmail(email: string): User | undefined {
+        return users.find(user => user.email === email);
+    }
 }
-export default createUserservices;

@@ -1,6 +1,6 @@
 
 import mongoose, { Model } from "mongoose";
-import Ireviewpage from "../../interfaces/Ireviewpage";
+import Ireviewpage from "../../interfaces/Ireview";
 
 
 const { Schema, model } = require("mongoose");

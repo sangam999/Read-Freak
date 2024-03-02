@@ -1,4 +1,4 @@
-export class reviewpage {
+export class review {
     review_id?: string;
     book_id?: string;
     user_id?: string;

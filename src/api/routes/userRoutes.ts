@@ -1,73 +1,77 @@
-// user.routes.ts
-import express, { Request, Response } from 'express';
-// @ts-ignore
-import {createUserservices}from "../../services/createUserservices"
-import User from '../../interfaces/IUser'
-import {authService} from "../../services/authServices";
+import express, { Request, Response } from "express";
+import bodyParser from "body-parser";
+import { AuthService } from "./AuthService";
+import { UserRole } from "./User";
 
+const app = express();
+const port = 3000;
 
+app.use(bodyParser.json());
 
-const router = express.Router();
-const userService = new createUserservices();
-
-const usernameRegex: RegExp = /^[a-zA-Z_]+$/;
-const emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-
-
-router.post("/login", async (req: Request, res: Response) => {
-
+app.post("/signup", async (req: Request, res: Response) => {
+    const { username, password, role } = req.body;
+    if (!username || !password || !role) {
+        return res.status(400).send("Username, password, and role are required");
+    }
     try {
-        const { email, password } = req.body as User;
-        if (!email || !password) {
-            return res.status(400).json({
-                success: false,
-                Message: "please fill the detiail",
-            });
-        }
-        const { user, token } = await authService.login(email, password)
-
-        const Response = createUserservices(user);
-
-        return res.json({ Response, token })
+        const user = await AuthService.signUp(username, password, role);
+        res.json(user);
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            success: false,
-            message: "login fail INVALID CREDENTIAL",
-        });
+        res.status(500).send("Error signing up");
     }
+});
 
-})
-router.post("/signup", async (req: Request, res: Response) => {
-    const { username, email, password } = req.body;
-
-    if (!username || !email || !password) {
-        return res.status(400).json({ error: 'Username and email are required' })
-    }
-    if (typeof username !== 'string' || typeof email !== 'string' || typeof password !== "string") {
-        return res.status(400).json({ error: 'Invalid username or email' })
-    }
-    if (!usernameRegex.test(username)) {
-        return res.status(400).json({ error: 'Invalid username format' });
-    }
-    if (!emailRegex.test(email)) {
-        return res.status(400).json({ error: 'Invalid email address' });
+app.post("/login", async (req: Request, res: Response) => {
+    const { username, password } = req.body;
+    if (!username || !password) {
+        return res.status(400).send("Username and password are required");
     }
     try {
-        const data = await userService.createUser({
-            username, email, password,
-        });
-
-        const Response = createUserservices.void(data);
-        res.status(201).json({
-            Response,
-            messaage: "user created successfully"
-        });
-    } catch (error: any) {
-        console.error(error.message)
-        res.status(500).json({ error });
+        const token = await AuthService.login(username, password);
+        if (token) {
+            res.json({ token });
+        } else {
+            res.status(401).send("Invalid username or password");
+        }
+    } catch (error) {
+        res.status(500).send("Error logging in");
     }
+});
 
-})
-export default router;
+app.get("/profile", async (req: Request, res: Response) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+        return res.status(401).send("Unauthorized");
+    }
+    try {
+        const decodedToken = await AuthService.verifyToken(token);
+        if (decodedToken) {
+            res.json({ userId: decodedToken.userId, role: decodedToken.role });
+        } else {
+            res.status(401).send("Invalid token");
+        }
+    } catch (error) {
+        res.status(500).send("Error verifying token");
+    }
+});
+
+app.get("/admin", async (req: Request, res: Response) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+        return res.status(401).send("Unauthorized");
+    }
+    try {
+        const decodedToken = await AuthService.verifyToken(token);
+        if (decodedToken && decodedToken.role === UserRole.ADMIN) {
+            res.send("Admin dashboard");
+        } else {
+            res.status(403).send("Access forbidden");
+        }
+    } catch (error) {
+        res.status(500).send("Error verifying token");
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
