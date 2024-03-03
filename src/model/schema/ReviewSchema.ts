@@ -1,9 +1,8 @@
 
-import mongoose, { Model } from "mongoose";
+import mongoose, {Model, Schema} from "mongoose";
 import Ireviewpage from "../../interfaces/Ireview";
 
 
-const { Schema, model } = require("mongoose");
 
 const reviewSchema = new Schema(
     {

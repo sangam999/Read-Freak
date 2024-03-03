@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { HomepageService } from "./HomepageService";
+import { HomepageService } from "../../services/HomepageServices";
 import {homepage} from "../response/homepage";
 import HomePage from "../../model/schema/HomePage";
 

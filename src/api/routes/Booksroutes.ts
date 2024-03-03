@@ -1,4 +1,4 @@
-import  express from 'express'
+import  express, {Request, Response} from 'express'
 import bodyParser from "body-parser";
 import {BookService} from "../../services/Bookservices";
 
@@ -8,7 +8,7 @@ const bookService = new BookService();
 
 app.use(bodyParser.json());
 
-app.get("/books", (re) => {
+app.get("/books", (res: Response, req: Request) => {
     res.json(bookService.getAllBooks());
 });
 

@@ -1,43 +1,56 @@
-import { User, users, UserRole } from "./User";
+import userSchemaModel from "../model/schema/userSchema";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import IUser from "../interfaces/IUser";
+import UserSchema from "../model/schema/userSchema";
 
 const JWT_SECRET = "your-secret-key";
 
 export class AuthService {
-    static async signUp(username: string, password: string, role: UserRole): Promise<User> {
+    static async signUp(username: string, password: string, email: string) {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user: User = {
-            id: String(users.length + 1),
-            username,
+        const user: IUser = {
+            // id: String(users.length + 1),
+            username: username,
+            email: email,
             password: hashedPassword,
-            role
+            role: "user"
+
         };
-        users.push(user);
+        try {
+            await userSchemaModel.insertMany([user]);
+        } catch (err) {
+
+            return err.message;
+        }
+
+
         return user;
     }
+    static async login(username: string, password: string) {
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-    static async login(username: string, password: string): Promise<string | null> {
-        const user = users.find(user => user.username === username);
-        if (!user) {
-            return null; // User not found
+        try {
+            await userSchemaModel.find({username: username,password:password});
+        } catch (err) {
+
+            return err.message;
         }
 
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) {
-            return null; // Incorrect password
-        }
 
-        const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
-        return token;
+        return userSchemaModel;
     }
 
-    static async verifyToken(token: string): Promise<{ userId: string, role: UserRole } | null> {
+
+
+    static async verifyToken(token: string): Promise<{ userId: string; role: IUser }{
         try {
-            const decodedToken = jwt.verify(token, JWT_SECRET) as { userId: string, role: UserRole };
+            const decodedToken = jwt.verify(token, JWT_SECRET) as { userId: string, role: IUser };
             return decodedToken;
-        } catch (error) {
-            return null;
+        }
+    catch (error){
+
+        return null;
         }
     }
 }

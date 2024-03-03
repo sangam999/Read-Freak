@@ -1,13 +1,23 @@
-import { User, users } from "./User";
 import bcrypt from "bcrypt";
+import IUser from "../interfaces/IUser";
+import UserSchema from "../model/schema/userSchema";
+import userSchema from "../model/schema/userSchema";
+import userSchemaModel from "../model/schema/userSchema";
+import userResponse from "../api/response/userResponse";
+import * as string_decoder from "string_decoder";
+import {HydratedDocument, QueryWithHelpers} from "mongoose";
+
 
 export class UserService {
-    static async createUser(username: string, password: string, email: string): Promise<User> {
+    static async createUser(username: string, password: string, email: string): Promise<IUser> {
+
+        const ifUsernameData: IUser[] = await UserSchema.find({username: username});
+        const ifEmailData: IUser[] = await UserSchema.find({username: username})
         // Check if the username or email is already taken
-        if (users.some(user => user.username === username)) {
+        if (ifUsernameData.length) {
             throw new Error("Username is already taken");
         }
-        if (users.some(user => user.email === email)) {
+        if (ifEmailData.length) {
             throw new Error("Email is already registered");
         }
 
@@ -15,28 +25,27 @@ export class UserService {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create a new user object
-        const user: User = {
-            id: String(users.length + 1),
-            username,
+        let user: IUser
+       = <IUser>{
+            username: String(UserSchema.length + 1),
             password: hashedPassword,
-            email
         };
 
         // Save the user to the list of users
-        users.push(user);
+        userSchemaModel.insertMany([user]);
 
         return user;
     }
 
-    static getUserById(id: string): User | undefined {
-        return users.find(user => user.id === id);
+    static getUserById(id: string): QueryWithHelpers<Array<HydratedDocument<IUser, {}, {}>>, HydratedDocument<IUser, {}, {}>, {}, IUser, "find"> {
+        return UserSchema.find((user: { id: string; }) => user.id === id);
     }
 
-    static getUserByUsername(username: string): User | undefined {
-        return users.find(user => user.username === username);
+    static getUserByUsername(username: string):QueryWithHelpers<Array<HydratedDocument<IUser, {}, {}>>, HydratedDocument<IUser, {}, {}>, {}, IUser, "find">{
+        return userSchema.find((user: { username: string; })=> user.username === username);
     }
 
-    static getUserByEmail(email: string): User | undefined {
-        return users.find(user => user.email === email);
+    static getUserByEmail(email: string): QueryWithHelpers<Array<HydratedDocument<IUser, {}, {}>>, HydratedDocument<IUser, {}, {}>, {}, IUser, "find"> {
+        return userSchema.find((user: { email: string; }) => user.email === email);
     }
 }
