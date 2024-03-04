@@ -17,8 +17,8 @@ export class BookService {
         return book;
     }
 
-    getAllBooks(): Book[] {
-        return this.books;
+    async getAllBooks(): Promise<IBooksPage[]> {
+        return booksModel.find({});
     }
 
     getBookById(id: number): Book | undefined {

@@ -8,7 +8,7 @@ const { Schema, model } = require("mongoose");
 const homepageSchema = new Schema(
     {
         banner : {
-            type: Text,
+            type: String,
             required: true,
         },
         tittle :{

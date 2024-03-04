@@ -1,6 +1,10 @@
-import dotenv from "dotenv"
+const dotenv = require('dotenv');
 
-const env = dotenv.config()
+const env = dotenv.config();
+
+if (!env) {
+    throw new Error("Cannot find .env file");
+}
 
 export default {
     port : process.env.PORT,

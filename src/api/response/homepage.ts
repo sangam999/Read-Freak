@@ -7,8 +7,8 @@ export class homepage{
 }
 
 export class LayoutContent {
-    banner?:Text;
-    title?: Text;
+    banner?:string;
+    title?: string;
     img?:string;
     summary?: Array<string> = [];
     author?:string;
@@ -19,8 +19,8 @@ export class LayoutContent {
 
 
     constructor(
-        banner?:Text,
-        title?: Text,
+        banner?:string,
+        title?: string,
         img?: string,
         summary?: Array<string>,
         author?:string,

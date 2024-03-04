@@ -2,8 +2,8 @@ import mongoose from "mongoose"
     import User from "./IUser";
 
     export default interface IHomePage {
-    banner?:Text;
-    title?: Text;
+    banner?:String;
+    title?: String;
     img?:string;
     summary: Array<string>;
     author:string;
