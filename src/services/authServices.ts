@@ -20,7 +20,7 @@ export class AuthService {
         try {
             await userSchemaModel.insertMany([user]);
         } catch (err) {
-
+            // @ts-ignore
             return err.message;
         }
 
@@ -33,7 +33,7 @@ export class AuthService {
         try {
             await userSchemaModel.find({username: username,password:password});
         } catch (err) {
-
+            // @ts-ignore
             return err.message;
         }
 
@@ -43,9 +43,9 @@ export class AuthService {
 
 
 
-    static async verifyToken(token: string): Promise<{ userId: string; role: IUser }{
+    static async verifyToken(token: string){
         try {
-            const decodedToken = jwt.verify(token, JWT_SECRET) as { userId: string, role: IUser };
+            const decodedToken = jwt.verify(token, JWT_SECRET) as { userId: string, role: string };
             return decodedToken;
         }
     catch (error){
