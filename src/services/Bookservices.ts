@@ -1,45 +1,55 @@
-
 import {Book} from "../api/response/Booksresponse";
 import booksModel from "../model/schema/BooksSchema";
 import IBooksPage from "../interfaces/IBooklsPage";
+import booksSchema from "../model/schema/BooksSchema";
 
 export class BookService {
-    private books: Book[] = [];
-    private nextId: number = 1;
 
     async getBook(id: string): Promise<IBooksPage[]> {
         return booksModel.find({id: id})
     }
 
-    addBook(title: string, author: string, year: number): Book {
-        const book = new Book(this.nextId++, title, author, year);
-        this.books.push(book);
-        return book;
+    async addBook(title: string, author: string, year: string) {
+        const book: IBooksPage = {
+            title: title,
+            author: author,
+            year: year
+        };
+
+        try {
+            const update = await booksModel.insertMany([book]);
+            return update;
+        } catch (err) {
+            throw new Error((err as Error).message);
+        }
     }
 
     async getAllBooks(): Promise<IBooksPage[]> {
         return booksModel.find({});
     }
 
-    getBookById(id: number): Book | undefined {
-        return this.books.find(book => book.id === id);
+
+    async updateBook(title:string, year: string) {
+        try {
+            const updatebook = await booksModel.updateOne({title:title},{$set: {year:year}});
+            if (updatebook.modifiedCount) {
+                return updatebook;
+            }
+        } catch (err) {
+            throw new Error((err as Error).message);
+        }
     }
 
-    updateBook(id: number, title: string, author: string, year: number): Book | undefined {
-        const index = this.books.findIndex(book => book.id === id);
-        if (index !== -1) {
-            this.books[index] = { ...this.books[index], title, author, year };
-            return this.books[index];
+    async deleteBook(title: string) {
+        try {
+            const deleted = await booksModel.findOneAndDelete({title: title});
+            return deleted;
+        } catch (err) {
+            throw new Error((err as Error).message);
         }
-        return undefined;
     }
 
-    deleteBook(id: number): boolean {
-        const index = this.books.findIndex(book => book.id === id);
-        if (index !== -1) {
-            this.books.splice(index, 1);
-            return true;
-        }
-        return false;
+    async deletebook(): Promise<IBooksPage[]> {
+        return booksModel.find();
     }
 }

@@ -3,13 +3,10 @@ import mongoose, {Model, Schema} from "mongoose";
 
 const booksSchema = new Schema(
     {
-        id : {
-            type: String,
-            required: true,
-        },
+        id : String,
         title :{
             type: String,
-            requried: true
+            required: true
         },
 
         author: {
@@ -18,7 +15,7 @@ const booksSchema = new Schema(
         },
 
         year: {
-            type: Number,
+            type: String,
             required: true,
         }
     },)
