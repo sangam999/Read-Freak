@@ -8,8 +8,8 @@ import * as string_decoder from "string_decoder";
 import {HydratedDocument, QueryWithHelpers} from "mongoose";
 
 
-export class UserService {
-    static async createUser(username: string, password: string, email: string): Promise<IUser> {
+export class createUserservice {
+    static async createUserservice(username: string, password: string, email: string): Promise<IUser> {
 
         const ifUsernameData: IUser[] = await UserSchema.find({username: username});
         const ifEmailData: IUser[] = await UserSchema.find({username: username})

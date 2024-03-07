@@ -7,36 +7,28 @@ export class homepage{
 }
 
 export class LayoutContent {
-    banner?:string;
-    title?: string;
-    img?:string;
-    summary?: Array<string> = [];
-    author?:string;
-    ratings?: string;
-    reviews?: string;
-    recommendations?: string;
+    banner: string;
+    recommendations:string;
+    wishLists:string;
+    recentreviews: string;
+    recentActivities: string;
 
 
 
     constructor(
-        banner?:string,
-        title?: string,
-        img?: string,
-        summary?: Array<string>,
-        author?:string,
-        ratings?:string,
-        reviews?:string,
-        recommendations?: string,
+        banner: string,
+        recommendations: string,
+        wishLists:string,
+        recentReveiws:string,
+        recentActivities:string,
+
 
     ) {
-        this.banner =banner;
-        this.title = title;
-        this.img = img;
-        this.summary = summary;
-        this.author = author;
-        this.ratings = ratings;
-        this.reviews = reviews;
+        this.banner = banner;
         this.recommendations = recommendations;
+        this.wishLists = wishLists;
+        this.recentreviews = recentReveiws;
+        this.recentActivities = recentActivities;
 
     }
 }

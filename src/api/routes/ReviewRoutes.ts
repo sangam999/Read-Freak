@@ -1,65 +1,66 @@
-import express, { Request, Response } from 'express';
+import express, {Request, Response, Router} from 'express';
 import ReviewServices from "../../services/ReviewServices";
 import Ireviewpage from "../../interfaces/Ireview";
+import bodyParser from "body-parser";
 
-const router = express.Router();
+export default (app: Router) => {
+    const reviewService = new ReviewServices();
 
 // Create a new review
-router.post('/', async (req: Request, res: Response) => {
-    try {
-        const reviewData: Ireviewpage = req.body;
-        const newReview = await ReviewServices.createReview(reviewData);
-        res.status(201).json(newReview);
-    } catch (error) {
-        // @ts-ignore
-        res.status(500).json({ message: error.message });
-    }
-});
+    app.post('/createreview', async (req: Request, res: Response) => {
+        try {
+            const reviewData: Ireviewpage = req.body;
+            const newReview = await reviewService.createReview(reviewData);
+            res.status(201).json(newReview);
+        } catch (error) {
+            // @ts-ignore
+            res.status(500).json({message: error.message});
+        }
+    });
 
 // Get review by ID
-router.get('/:id', async (req: Request, res: Response) => {
-    try {
-        const reviewId = req.params.id;
-        const review = await ReviewServices.getReviewById(reviewId);
-        if (!review) {
-            res.status(404).json({ message: 'Review not found' });
-            return;
+    app.get('/getreview/:id', async (req: Request, res: Response) => {
+        try {
+            const id = req.params.id;
+            const review = await reviewService.getReviewById(id);
+            if (!review) {
+                res.status(404).json({message: 'Review not found'});
+                return;
+            }
+            res.json(review);
+        } catch (error) {
+            // @ts-ignore
+            res.status(500).json({message: error.message});
         }
-        res.json(review);
-    } catch (error) {
-        // @ts-ignore
-        res.status(500).json({ message: error.message });
-    }
-});
+    });
 
-// Update review
-router.put('/:id', async (req: Request, res: Response) => {
-    try {
-        const reviewId = req.params.id;
-        const updatedData: Partial<Ireviewpage> = req.body;
-        const updatedReview = await ReviewServices.updateReview(reviewId, updatedData);
-        if (!updatedReview) {
-            res.status(404).json({ message: 'Review not found' });
-            return;
+ //Update review
+    app.post('/updateReview/:id', async (req: Request, res: Response) => {
+        try {
+            const id = req.params.id;
+            const updatedData: Partial<Ireviewpage> = req.body;
+            const updatedReview = await reviewService.updateReview(id, updatedData);
+            if (!updatedReview) {
+                res.status(404).json({message: 'Review not found'});
+                return;
+            }
+            res.json(updatedReview);
+        } catch (error) {
+
+            // @ts-ignore
+            res.status(500).json({message: error.message});
         }
-        res.json(updatedReview);
-    } catch (error) {
-
-        // @ts-ignore
-        res.status(500).json({ message: error.message });
-    }
-});
+    })
 
 // Delete review
-router.delete('/:id', async (req: Request, res: Response) => {
-    try {
-        const reviewId = req.params.id;
-        await ReviewServices.deleteReview(reviewId);
-        res.status(204).end();
-    } catch (error) {
-        // @ts-ignore
-        res.status(500).json({ message: error.message });
-    }
-});
-
-export default router;
+    app.get('/deletereview/:id', async (req: Request, res: Response) => {
+        try {
+            const id = req.params.id;
+            await reviewService.deleteReview(id);
+            res.status(200).json({message: "Deleted Successfully"});
+        } catch (error) {
+            // @ts-ignore
+            res.status(500).json({message: error.message});
+        }
+    });
+}

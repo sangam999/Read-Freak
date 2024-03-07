@@ -1,6 +1,6 @@
 import {Book} from "../api/response/Booksresponse";
 import booksModel from "../model/schema/BooksSchema";
-import IBooksPage from "../interfaces/IBooklsPage";
+import IBooksPage from "../interfaces/IBooksPage";
 import booksSchema from "../model/schema/BooksSchema";
 
 export class BookService {

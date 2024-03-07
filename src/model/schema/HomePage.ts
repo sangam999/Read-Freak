@@ -7,36 +7,24 @@ const { Schema, model } = require("mongoose");
 
 const homepageSchema = new Schema(
     {
-        banner : {
-            type: String,
-            required: true,
-        },
-        tittle :{
+
+        banner :{
             type: String,
             requried: true
         },
-        Img : {
-            type : String,
-            required : true
-        },
-
-        summary: {
+        recommendations: {
             type: String,
             required: true,
         },
-        author: {
+        wishLists: {
             type: String,
             required: true,
         },
-        ratings: {
-            type: String,
-            required: true,
-        },
-        reviews: {
+        recentreviews: {
             type: Number,
             required: true,
         },
-        recommendations: {
+        recentactivity: {
             type : String,
             required : true,
         }

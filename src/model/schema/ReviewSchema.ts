@@ -6,32 +6,24 @@ import Ireviewpage from "../../interfaces/Ireview";
 
 const reviewSchema = new Schema(
     {
-        review_id : {
-            type: String,
-            required: true,
-        },
-        book_id :{
+        bookId :{
             type: String,
             requried: true
-        },
-        user_id : {
-            type : String,
-            required : true
         },
 
         rating: {
             type: String,
             required: true,
         },
-        review_text: {
+        reviewText: {
             type: String,
             required: true,
         },
-        review_by: {
+        reviewBy: {
             type: String,
             required: true,
         },
-        review_date: {
+        reviewDate: {
             type: Number,
             required: true,
         }

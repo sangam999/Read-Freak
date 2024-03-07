@@ -1,9 +1,9 @@
-import IBooksPage from "../../interfaces/IBooklsPage";
+import IBooksPage from "../../interfaces/IBooksPage";
 import mongoose, {Model, Schema} from "mongoose";
 
 const booksSchema = new Schema(
     {
-        id : String,
+        _id : String,
         title :{
             type: String,
             required: true
