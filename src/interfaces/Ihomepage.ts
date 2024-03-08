@@ -5,7 +5,6 @@ import mongoose from "mongoose"
     banner: String;
     recommendations:string;
     whistLists:string;
-    recentReviews: string;
     recentActivity: string;
 
 }

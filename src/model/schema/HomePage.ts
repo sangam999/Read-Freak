@@ -20,10 +20,6 @@ const homepageSchema = new Schema(
             type: String,
             required: true,
         },
-        recentreviews: {
-            type: Number,
-            required: true,
-        },
         recentactivity: {
             type : String,
             required : true,

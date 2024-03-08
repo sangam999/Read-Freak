@@ -10,7 +10,6 @@ export class LayoutContent {
     banner: string;
     recommendations:string;
     wishLists:string;
-    recentReviews: string;
     recentActivities: string;
 
 
@@ -19,7 +18,6 @@ export class LayoutContent {
         banner: string,
         recommendations: string,
         wishLists:string,
-        recentReveiws:string,
         recentActivities:string,
 
 
@@ -27,7 +25,6 @@ export class LayoutContent {
         this.banner = banner;
         this.recommendations = recommendations;
         this.wishLists = wishLists;
-        this.recentReviews = recentReveiws;
         this.recentActivities = recentActivities;
 
     }
