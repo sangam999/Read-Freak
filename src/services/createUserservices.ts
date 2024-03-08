@@ -9,7 +9,7 @@ import {HydratedDocument, QueryWithHelpers} from "mongoose";
 
 
 export class createUserservice {
-    static async createUserservice(username: string, password: string, email: string): Promise<IUser> {
+static async createUserservice(username: string, password: string, email: string): Promise<IUser> {
 
         const ifUsernameData: IUser[] = await UserSchema.find({username: username});
         const ifEmailData: IUser[] = await UserSchema.find({username: username})

@@ -1,16 +1,17 @@
 
-import IHomePage from "../interfaces/Ihomepage";
 import HomePageModel from "../model/schema/HomePage";
-import {homepage} from "../api/response/homepage";
+import {Homepage} from "../api/response/homepage";
+import homePage from "../model/schema/HomePage";
 
 
 export class HomepageService {
 
+    async getAllHomepageEntries(): Promise<Homepage> {
 
-    static async getAllHomepageEntries(): Promise<IHomePage[]> {
-        return HomePageModel.find().exec();
+        const response: Homepage = new Homepage();
+
+        return response;
     }
-
 
 
 

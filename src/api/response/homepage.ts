@@ -1,14 +1,8 @@
-export class homepage{
-    constructor(
-        public layoutType: string,
-        public layoutContent: LayoutContent
-    ) {
-    }
-}
 
-export class LayoutContent {
+
+export class Homepage {
     banner: string;
-    recommendations:string;
+    recommendation:string;
     wishLists:string;
     recentActivities: string;
 
@@ -16,14 +10,12 @@ export class LayoutContent {
 
     constructor(
         banner: string,
-        recommendations: string,
+        recommendation: string,
         wishLists:string,
         recentActivities:string,
-
-
     ) {
         this.banner = banner;
-        this.recommendations = recommendations;
+        this.recommendation = recommendation;
         this.wishLists = wishLists;
         this.recentActivities = recentActivities;
 
