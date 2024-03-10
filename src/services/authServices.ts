@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import IUser from "../interfaces/IUser";
 import UserSchema from "../model/schema/userSchema";
+import userSchema from "../model/schema/userSchema";
 
 const JWT_SECRET = "your-secret-key";
 
@@ -21,7 +22,7 @@ export class AuthService {
             await userSchemaModel.insertMany([user]);
         } catch (err) {
             // @ts-ignore
-            return err.message;
+
         }
 
 
@@ -34,7 +35,7 @@ export class AuthService {
             await userSchemaModel.find({username: username,password:password});
         } catch (err) {
             // @ts-ignore
-            return err.message;
+
         }
 
 
