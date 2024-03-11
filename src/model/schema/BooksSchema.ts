@@ -17,6 +17,10 @@ const booksSchema = new Schema(
         year: {
             type: String,
             required: true,
+        },
+        genre: {
+            type: String,
+            required: true,
         }
     },)
 const booksModel: Model<IBooksPage> = mongoose.model<IBooksPage>('books', booksSchema);

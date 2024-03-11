@@ -2,7 +2,7 @@ export class recommendation {
     title: string;
     author:string;
     genre:string;
-    reviews: string;
+    recentActivities: string;
 
 
 
@@ -10,18 +10,16 @@ export class recommendation {
         title: string,
         author: string,
         genre:string,
-        reviews:string,
+        recentActivities:string,
     )
 
     {
         this.title = title;
         this.author = author;
         this.genre = genre;
-        this.reviews = reviews;
+        this.recentActivities = recentActivities;
 
     }
 
-    static async getRecommendations() {
 
-    }
 }

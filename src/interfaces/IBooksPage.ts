@@ -5,4 +5,5 @@ export default interface IBooksPage {
     title: string;
     author:string;
     year: string;
+    genre: string;
 }

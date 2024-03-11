@@ -17,7 +17,5 @@ export class banner {
 
     }
 
-    static async getbanners() {
 
-    }
 }

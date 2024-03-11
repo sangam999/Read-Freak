@@ -1,14 +1,17 @@
+import IBooksPage from "../../interfaces/IBooksPage";
 
 export class Book {
 
     title: string;
     author: string;
     year: number;
+    genre: string;
 
-    constructor( title: string, author: string, year: number) {
+    constructor( book: IBooksPage) {
 
-        this.title = title;
-        this.author = author;
-        this.year = year;
+        this.title = book.title;
+        this.author = book.author;
+        this.year = parseInt(book.year);
+        this.genre = book.genre;
     }
 }
