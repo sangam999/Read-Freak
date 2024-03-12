@@ -1,29 +1,29 @@
 export class recentActivities {
     bookId: string;
     reviewId:string;
-    username:string;
-    review: string;
-    reviewBy: string;
-    reviewDate: string;
+    user_Id:string;
+    bookreview: string;
+   booktitle: string;
+    bookauthor: string;
 
 
 
     constructor(
         bookId: string,
         reviewId: string,
-        username:string,
-        review:string,
-        reviewBy: string,
-        reviewDate: string,
+        user_Id:string,
+        bookreview:string,
+        booktitle: string,
+        bookauthor: string,
     )
 
     {
         this.bookId = bookId;
         this.reviewId = reviewId;
-        this.username = username;
-        this.review = review;
-        this.reviewBy=reviewBy;
-        this.reviewDate=reviewDate;
+        this.user_Id = user_Id;
+        this.bookreview = bookreview;
+        this.booktitle=booktitle;
+        this.bookauthor=bookauthor;
 
     }
 }

@@ -1,7 +1,7 @@
 export class wishLists {
 
     bookid: string;
-    username: string;
+    user_Id: string;
     title:string;
     author:string;
     genre: string;
@@ -9,7 +9,7 @@ export class wishLists {
 
     constructor(
         bookid: string,
-        username: string,
+        user_Id: string,
         title: string,
         author: string,
         genre:string,
@@ -21,7 +21,7 @@ export class wishLists {
 
 
         this.bookid =bookid;
-        this.username =username;
+        this.user_Id =user_Id;
         this.title=title;
         this.author=author;
         this.genre=genre;

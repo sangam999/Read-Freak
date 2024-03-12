@@ -10,7 +10,7 @@ export class BookService {
     }
 
     async addBook(title: string, author: string, year: string) {
-        const book: IBooksPage = {
+        const book: { year: string; author: string; title: string } = {
             title: title,
             author: author,
             year: year
