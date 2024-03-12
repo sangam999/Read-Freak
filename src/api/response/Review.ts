@@ -1,4 +1,4 @@
-export class review {
+export class Review {
     bookid: string;
     rating: string;
     reviewText:string;

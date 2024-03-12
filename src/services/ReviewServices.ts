@@ -52,5 +52,3 @@ import reviewSchema from "../model/schema/ReviewSchema";
 
     // Add more methods as needed for fetching reviews by book ID, filtering, etc.
 }
-
-export default ReviewService;

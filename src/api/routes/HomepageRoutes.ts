@@ -34,6 +34,7 @@ export default (app: Router) => {
             const wishListsData = await homepageServices.wishLists(userId);
             res.json(wishListsData);
         } catch (error) {
+            // @ts-ignore
             res.status(500).json({error: error.message});
         }
     });
@@ -47,8 +48,9 @@ export default (app: Router) => {
             res.status(500).json({error: error.message});
         }
     });
+}
 
-    app.get('/recent-activities', async (req: Request, res: Response) => {
+    /*/app.get('/recent-activities/:id', async (req: Request, res: Response) => {
         try {
             // Assuming userId is passed as a query parameter
             const {userId} = req.query;
@@ -61,3 +63,5 @@ export default (app: Router) => {
     });
 
 }
+
+     */
