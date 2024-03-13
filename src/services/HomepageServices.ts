@@ -1,4 +1,3 @@
-
 import { Request, Response } from 'express';
 import HomePageModel from "../model/schema/HomePage";
 import IHomePage from "../interfaces/Ihomepage";
@@ -7,23 +6,24 @@ import IBooksPage from "../interfaces/IBooksPage";
 import wishListsModel from "../model/schema/wishLists";
 import bannerModel from "../model/schema/banner";
 import recentActivitiesModel from "../model/schema/recentActivities";
-import {Homepage} from "../api/response/homepage";
+import { Homepage } from "../api/response/homepage";
 import IwishLists from "../interfaces/IwishLists";
 import WishLists from "../model/schema/wishLists";
-import {wishLists} from "../api/response/wishLists";
+import { wishLists as wishListsResponse } from "../api/response/wishLists";
 
 export class HomepageServices {
 
     async getHomepage(recentlyViewed: IBooksPage[]) {
         const recommendation = await this.recommendation(recentlyViewed);
         const banner = `Greetings`;
-        const wishLists :IwishLists
 
+        const wishLists = await this.wishLists();
 
-        const response: Homepage = new Homepage(banner, recommendation);
+        const response: Homepage = new Homepage(banner, recommendation, wishLists);
 
         return response;
     }
+
     async recommendation(recentlyViewed: IBooksPage[]): Promise<IBooksPage[]> {
         try {
             const recommendedBooks: IBooksPage[] = [];
@@ -38,16 +38,17 @@ export class HomepageServices {
         }
     }
 
-    async wishLists(userId: IwishLists[]): Promise<wishLists> {
+    async wishLists(): Promise<wishListsResponse[]> {
         try {
-            const wishLists: wishLists await.wishListsModel.find();
+            const wishLists = await wishListsModel.find();
             return wishLists;
         } catch (err) {
             throw new Error((err as Error).message);
         }
     }
+}
 
-    // async recentActivities(userId: string): Promise<any[]> {
+// async recentActivities(userId: string): Promise<any[]> {
     //     try {
     //         const recentActivities = await recentActivitiesModel.find({ userId });
     //         return recentActivities;
