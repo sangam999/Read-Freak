@@ -1,10 +1,10 @@
-import mongoose from "mongoose"
-    import User from "./IUser";
+import {Recommendation} from "../api/response/Recommendation";
+import {wishLists} from "../api/response/wishLists";
 
-    export default interface IHomePage {
+export default interface IHomePage {
     banner: string;
-    recommendations:string;
-    whistLists:string;
-    recentActivity: string;
+    recommendations: Recommendation[];
+    whistLists: wishLists[];
+
 
 }

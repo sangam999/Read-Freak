@@ -8,15 +8,12 @@ export default (app: Router) => {
     app.get('/homepage', async (req: Request, res: Response) => {
         try {
 
-            const recentlyViewed: IBooksPage[] = req.body.recentlyViewed;
+            // const recentlyViewed: IBooksPage[] = req.body.recentlyViewed;
+            const homepage = await homepageServices.getHomepage();
 
-
-            const homepage = await homepageServices.getHomepage(recentlyViewed);
-
-            res.json(homepage);
-        } catch (error) {
-            // @ts-ignore
-            res.status(500).json({message: error.message});
+            res.send(homepage);
+        } catch (err) {
+            res.json({message: (err as Error).message});
         }
     });
 

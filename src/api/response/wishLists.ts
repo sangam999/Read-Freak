@@ -1,3 +1,6 @@
+import IBooksPage from "../../interfaces/IBooksPage";
+import IwishLists from "../../interfaces/IwishLists";
+
 export class wishLists {
 
     bookid: string;
@@ -8,6 +11,7 @@ export class wishLists {
 
 
     constructor(
+
         bookid: string,
         user_Id: string,
         title: string,

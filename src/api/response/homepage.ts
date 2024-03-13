@@ -1,16 +1,18 @@
+import {Recommendation} from "./Recommendation";
+import {wishLists} from "./wishLists";
 
 
 export class Homepage {
     banner: string;
-    recommendation:string;
-    wishLists:string;
+    Recommendation:Recommendation[];
+    wishLists:wishLists[];
     constructor(
         banner: string,
-        recommendation: string,
-        wishLists:string,
+        Recommendation:Recommendation[],
+        wishLists:wishLists[],
     ) {
         this.banner = banner;
-        this.recommendation = recommendation;
+        this.Recommendation = Recommendation;
         this.wishLists = wishLists;
 
     }
