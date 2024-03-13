@@ -1,20 +1,21 @@
-import express, {Request, Response, Router} from "express";
-import bodyParser from "body-parser";
+import {Request, Response, Router} from "express";
 import {AuthService} from "../../services/authServices";
-import UserSchema from "../../model/schema/userSchema";
 
 
 export default (app: Router) => {
+    const authService = new AuthService();
+
+
     app.post("/signup", async (req: Request, res: Response) => {
         const {username, password, email} = req.body;
         if (!username || !password || !email) {
             return res.status(400).send("Username, password, and role are required");
         }
         try {
-            const user = await AuthService.signUp(username, password, email);
+            const user = await authService.signUp(username, password, email);
             res.json(user);
         } catch (error) {
-            res.status(500).send("Error signing up");
+            res.send("Error signing up");
         }
     });
 
@@ -24,14 +25,15 @@ export default (app: Router) => {
             return res.status(400).send("Username and password are required");
         }
         try {
-            const token = await AuthService.login(username, password);
+            const token = await authService.login(username, password);
             if (token) {
                 res.json({token});
             } else {
+                return
                 res.status(401).send("Invalid username or password");
             }
         } catch (error) {
-            res.status(500).send("Error logging in");
+            res.status(500).send("invalid logging in");
         }
     });
 
@@ -41,7 +43,7 @@ export default (app: Router) => {
             return res.status(401).send("Unauthorized");
         }
         try {
-            const decodedToken = await AuthService.verifyToken(token);
+            const decodedToken = await authService.verifyToken(token);
             if (decodedToken) {
                 res.json({userId: decodedToken.userId, role: decodedToken.role});
             } else {
@@ -59,7 +61,7 @@ export default (app: Router) => {
                 return res.status(401).send("Unauthorized");
             }
             try {
-                const decodedToken = await AuthService.verifyToken(token);
+                const decodedToken = await authService.verifyToken(token);
                 if (decodedToken && decodedToken.role === "admin") {
                     res.send("Admin dashboard");
                 } else {

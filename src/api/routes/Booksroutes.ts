@@ -22,14 +22,15 @@ export default (app: Router) => {
     // });
 
     app.post("/addBooks", async (req, res) => {
-        const { title, author, year } = req.body;
-        const book = bookService.addBook(title, author, year);
+        const { title, author, year,genre } = req.body;
+        const book = bookService.addBook(title, author, year,genre);
         res.json(book);
     });
 
-    app.put("/updatebook", (req, res) => {
+    app.put("/updatebook", async (req, res) => {
         const { title, year } = req.body;
-        const book = bookService.updateBook(title, year);
+        const book = await bookService.updateBook(title, year);
+        res.json(book);
     });
 
     app.delete("/deletebooks", (req, res) => {

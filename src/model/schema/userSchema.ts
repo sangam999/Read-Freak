@@ -14,13 +14,11 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
-        role: {
-            type: String,
-        },
         password: {
             type: String,
             required: true,
         },
+        role: String
     },)
 const userSchemaModel: Model<IUser> = mongoose.model<IUser>('user', userSchema);
 

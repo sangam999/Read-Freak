@@ -21,4 +21,3 @@ const isAuth = (req: ReqWithUser, res: Response, next: NextFunction) => {
     }
 };
 
-export = isAuth;

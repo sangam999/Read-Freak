@@ -9,11 +9,14 @@ export class BookService {
         return booksModel.find({id: id})
     }
 
-    async addBook(title: string, author: string, year: string) {
-        const book: { year: string; author: string; title: string } = {
+    async addBook(title: string, author: string, year: string,genre:string) {
+        const id = `book_${title.toLowerCase().split(" ").join("_")}`;
+        const book:IBooksPage = {
+            _id: id,
             title: title,
             author: author,
-            year: year
+            year: year,
+            genre :genre
         };
 
         try {
@@ -47,9 +50,5 @@ export class BookService {
         } catch (err) {
             throw new Error((err as Error).message);
         }
-    }
-
-    async deletebook(): Promise<IBooksPage[]> {
-        return booksModel.find();
     }
 }

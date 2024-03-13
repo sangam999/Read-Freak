@@ -1,4 +1,4 @@
-export  default  interface IwishLists{
+export  default  interface IWishLists{
     bookId:string;
     userId:string;
     title: string;

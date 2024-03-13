@@ -1,20 +1,24 @@
-import  booksModel from '../model/schema/BooksSchema';
+import booksModel from '../model/schema/BooksSchema';
 import IBooksPage from '../interfaces/IBooksPage';
-import wishListsModel from '../model/schema/wishLists'
-import { Homepage } from '../api/response/homepage';
-import {wishLists} from "../api/response/wishLists";
-import { Recommendation } from '../api/response/Recommendation';
+import wishListsModel from '../model/schema/WishLists'
+import {Homepage} from '../api/response/homepage';
+import {WishList} from "../api/response/WishList";
+import {Recommendation} from '../api/response/Recommendation';
+import IWishLists from "../interfaces/IWishLists";
+import wishLists from "../model/schema/WishLists";
+import userSchema from "../model/schema/userSchema";
+
 
 export class HomepageServices {
 
-    async getHomepage(recentlyViewed?: IBooksPage[]) {
+    async getHomepage(userId: string, recentlyViewed?: IBooksPage[]) {
         try {
             const Recommendation = await this.Recommendation();
             const banner = 'Greetings';
 
-            const wishLists = await this.getwishLists();
+            const WishLists = await this.getWishLists(userId)
 
-            const response: Homepage = new Homepage(banner, Recommendation, wishLists);
+            const response: Homepage = new Homepage(banner, Recommendation, WishLists);
 
             return response;
         } catch (err) {
@@ -43,25 +47,28 @@ export class HomepageServices {
         }
     }
 
-    async getwishLists(): Promise<wishLists[]> {
+    async  getWishLists(userId: string): Promise<WishList[]> {
         try {
-            const wishLists = await this.getwishLists();
-            return wishLists;
+            const list: WishList[] = []
+            const wishLists: IWishLists[] = await wishListsModel.find({ userId: userId });
+            return list;
         } catch (err) {
             throw new Error((err as Error).message);
         }
     }
+
 }
 
 
+
 // async recentActivities(userId: string): Promise<any[]> {
-    //     try {
-    //         const recentActivities = await recentActivitiesModel.find({ userId });
-    //         return recentActivities;
-    //     } catch (err) {
-    //         throw new Error((err as Error).message);
-    //     }
-    // }
+//     try {
+//         const recentActivities = await recentActivitiesModel.find({ userId });
+//         return recentActivities;
+//     } catch (err) {
+//         throw new Error((err as Error).message);
+//     }
+// }
 
 
 

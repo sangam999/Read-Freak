@@ -1,7 +1,4 @@
-import IBooksPage from "../../interfaces/IBooksPage";
-import IwishLists from "../../interfaces/IwishLists";
-
-export class wishLists {
+export class WishList {
 
     bookid: string;
     user_Id: string;

@@ -4,31 +4,28 @@ import jwt from "jsonwebtoken";
 import IUser from "../interfaces/IUser";
 import UserSchema from "../model/schema/userSchema";
 import userSchema from "../model/schema/userSchema";
+import e from "express";
 
 const JWT_SECRET = "your-secret-key";
 
 export class AuthService {
-    static async signUp(username: string, password: string, email: string) {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user: IUser = {
-            // id: String(users.length + 1),
-            username: username,
-            email: email,
-            password: hashedPassword,
-            role: "user"
-
-        };
+    async signUp(username: string, password: string, email: string) {
         try {
-            await userSchemaModel.insertMany([user]);
+            // const hashedPassword = await bcrypt.hash(password, 10);
+            const user: IUser = {
+                name: username,
+                email: email,
+                password: password,
+                role: "user"
+            };
+
+            const insertUser = await userSchemaModel.insertMany([user]);
+            return insertUser;
         } catch (err) {
-            // @ts-ignore
-
+            console.log(err);
         }
-
-
-        return user;
     }
-    static async login(username: string, password: string) {
+    async login(username: string, password: string) {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         try {
@@ -37,14 +34,12 @@ export class AuthService {
             // @ts-ignore
 
         }
-
-
         return userSchemaModel;
     }
 
 
 
-    static async verifyToken(token: string){
+    async verifyToken(token: string){
         try {
             const decodedToken = jwt.verify(token, JWT_SECRET) as { userId: string, role: string };
             return decodedToken;

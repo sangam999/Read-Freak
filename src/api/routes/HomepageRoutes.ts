@@ -1,15 +1,14 @@
 import express, {Request, Response, Router} from 'express';
-import { HomepageServices } from '../../services/HomepageServices'; // Assuming the file path to the HomepageServices class
-import IBooksPage from '../../interfaces/IBooksPage'; // Assuming the file path to the IBooksPage interface
+import { HomepageServices } from '../../services/HomepageServices';
 export default (app: Router) => {
     const homepageServices = new HomepageServices();
 
 // Route to get the homepage
     app.get('/homepage', async (req: Request, res: Response) => {
         try {
-
             // const recentlyViewed: IBooksPage[] = req.body.recentlyViewed;
-            const homepage = await homepageServices.getHomepage();
+            const userId = req.params.userId;
+            const homepage = await homepageServices.getHomepage(userId);
 
             res.send(homepage);
         } catch (err) {

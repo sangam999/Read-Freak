@@ -27,7 +27,7 @@ static async createUserservice(username: string, password: string, email: string
         // Create a new user object
         let user: IUser
        = <IUser>{
-            username: String(UserSchema.length + 1),
+            name: String(UserSchema.length + 1),
             password: hashedPassword,
         };
 

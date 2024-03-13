@@ -1,10 +1,10 @@
 import {Recommendation} from "../api/response/Recommendation";
-import {wishLists} from "../api/response/wishLists";
+import {WishList} from "../api/response/WishList";
 
 export default interface IHomePage {
     banner: string;
     recommendations: Recommendation[];
-    whistLists: wishLists[];
+    whistLists: WishList[];
 
 
 }
