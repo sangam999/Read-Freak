@@ -19,18 +19,3 @@ export default (app: Router) => {
 }
 
 
-/*/app.get('/recent-activities/:id', async (req: Request, res: Response) => {
-    try {
-        // Assuming userId is passed as a query parameter
-        const {userId} = req.query;
-        const recentActivitiesData = await homepageServices.recentActivities(userId);
-        res.json(recentActivitiesData);
-    } catch (error) {
-        // @ts-ignore
-        res.status(500).json({error: error.message});
-    }
-});
-
-}
-
- */

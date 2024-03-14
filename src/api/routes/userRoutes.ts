@@ -19,12 +19,12 @@ export default (app: Router) => {
     });
 
     app.post("/login", async (req: Request, res: Response) => {
-        const { username, password } = req.body;
-        if (!username || !password) {
+        const { email, password } = req.body;
+        if (!email || !password) {
             return res.status(400).send("Username and password are required");
         }
         try {
-            const token = await authService.login(username, password);
+            const token = await authService.login(email, password);
             if (token) {
                 res.json({ token });
             } else {

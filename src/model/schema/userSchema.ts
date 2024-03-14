@@ -6,6 +6,7 @@ const { Schema, model } = require("mongoose");
 
 const userSchema = new Schema(
     {
+        _id: String,
         name: {
             type: String,
             required: true,

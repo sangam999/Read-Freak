@@ -61,14 +61,6 @@ export class HomepageServices {
 
 
 
-// async recentActivities(userId: string): Promise<any[]> {
-//     try {
-//         const recentActivities = await recentActivitiesModel.find({ userId });
-//         return recentActivities;
-//     } catch (err) {
-//         throw new Error((err as Error).message);
-//     }
-// }
 
 
 

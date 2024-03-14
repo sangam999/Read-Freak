@@ -8,8 +8,9 @@ const JWT_SECRET = "your-secret-key";
 export class AuthService {
     async signUp(username: string, password: string, email: string) {
         try {
-            const hashedPassword = await bcrypt.hash(password, 10);
+            const genRanHex = this.hexaIdgen(16);const hashedPassword = await bcrypt.hash(password, 10);
             const user: IUser = {
+                _id: genRanHex,
                 name: username,
                 email: email,
                 password: hashedPassword,
@@ -24,14 +25,18 @@ export class AuthService {
         }
     }
 
-    async login(username: string, password: string) {
+    hexaIdgen(size: number) {
+        return [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+    }
+
+    async login(email: string, password: string) {
         try {
-            const user = await UserSchema.findOne({ username: username });
+            const user = await UserSchema.findOne({ email: email });
             if (!user) {
                 throw new Error("Invalid username");
             }
 
-            const isPasswordValid = await bcrypt.compare(password, user.password);
+            const isPasswordValid =await bcrypt.compare(password, user.password);
             if (!isPasswordValid) {
                 throw new Error("Invalid password");
             }
