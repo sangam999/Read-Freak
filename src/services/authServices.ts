@@ -1,52 +1,56 @@
-import userSchemaModel from "../model/schema/userSchema";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import IUser from "../interfaces/IUser";
 import UserSchema from "../model/schema/userSchema";
-import userSchema from "../model/schema/userSchema";
-import e from "express";
 
 const JWT_SECRET = "your-secret-key";
 
 export class AuthService {
     async signUp(username: string, password: string, email: string) {
         try {
-            // const hashedPassword = await bcrypt.hash(password, 10);
+            const hashedPassword = await bcrypt.hash(password, 10);
             const user: IUser = {
                 name: username,
                 email: email,
-                password: password,
+                password: hashedPassword,
                 role: "user"
             };
 
-            const insertUser = await userSchemaModel.insertMany([user]);
-            return insertUser;
+            const insertedUser = await UserSchema.create(user);
+            return insertedUser;
         } catch (err) {
-            console.log(err);
+            console.error(err);
+            throw new Error("Error signing up");
         }
     }
+
     async login(username: string, password: string) {
-        const hashedPassword = await bcrypt.hash(password, 10);
-
         try {
-            await userSchemaModel.find({username: username,password:password});
-        } catch (err) {
-            // @ts-ignore
+            const user = await UserSchema.findOne({ username: username });
+            if (!user) {
+                throw new Error("Invalid username");
+            }
 
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if (!isPasswordValid) {
+                throw new Error("Invalid password");
+            }
+
+            const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET);
+            return token;
+        } catch (error) {
+            console.error(error);
+            throw new Error("Error logging in");
         }
-        return userSchemaModel;
     }
 
-
-
-    async verifyToken(token: string){
+    async verifyToken(token: string) {
         try {
             const decodedToken = jwt.verify(token, JWT_SECRET) as { userId: string, role: string };
             return decodedToken;
-        }
-    catch (error){
-
-        return null;
+        } catch (error) {
+            console.error(error);
+            throw new Error("Invalid token");
         }
     }
 }
