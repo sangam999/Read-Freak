@@ -1,5 +1,6 @@
-import { Request, Response, Router } from "express";
+import  { Request, Response, Router } from "express";
 import { AuthService } from "../../services/authServices";
+
 
 export default (app: Router) => {
     const authService = new AuthService();
@@ -26,6 +27,10 @@ export default (app: Router) => {
         try {
             const token = await authService.login(email, password);
             if (token) {
+                res.cookie("token", token, {
+                    expires: new Date(Date.now() + 3 * 3600 * 1000),
+                    httpOnly: true
+                });
                 res.json({ token });
             } else {
                 return res.status(401).send("Invalid username or password");

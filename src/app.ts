@@ -1,35 +1,51 @@
-import {db} from "./dbloaders/dbConnect";
+import { db } from "./dbloaders/dbConnect";
 import routes from "./api";
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 import config from "./config/config";
+import userRoutes from "./api/routes/userRoutes";
 const express = require('express');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 dotenv.config();
 
 async function startServer() {
     const app = express();
+
     const port = config.port;
 
     app.get('/', (req: Request, res: Response) => {
         res.send('Express + TypeScript Server');
     });
-    // app.use( (req, res, next) => {
-    //     res.header('Access-Control-Allow-Origin', '*');
-    //     res.header(
-    //         'Access-Control-Allow-Headers',
-    //         'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    //     );
-    //
-    //     if ( req.method === 'OPTIONS' ) {
-    //         res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-    //         return res.status(200).json({});
-    //     }
-    //
-    //     next();
-    // });
 
+    // Use cookie-parser middleware
+    app.use(cookieParser());
+    app.use('/api/v1', userRoutes);
+
+
+    app.get('/', (req: Request, res: Response) => {
+        res.send('Hello, how are you?');
+    });
+
+// Error handling middleware
+    app.use((err: Error, req: Request, res: Response, next: Function) => {
+        console.error(err.stack);
+        res.status(500).send('Something went wrong.');
+    });
+
+
+
+
+    app.get('/', (req: Request, res: Response) => {
+        res.send('Hello, how are you?');
+    });
+
+// Error handling middleware
+    app.use((err: Error, req: Request, res: Response, next: Function) => {
+        console.error(err.stack);
+        res.status(500).send('Something went wrong.');
+    });
 
     await db();
 
