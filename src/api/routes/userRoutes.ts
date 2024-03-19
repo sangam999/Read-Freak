@@ -1,5 +1,6 @@
 import  { Request, Response, Router } from "express";
 import { AuthService } from "../../services/authServices";
+import {auth} from "../middlewear/Auth";
 
 
 export default (app: Router) => {
@@ -28,7 +29,7 @@ export default (app: Router) => {
             const token = await authService.login(email, password);
             if (token) {
                 res.cookie("token", token, {
-                    expires: new Date(Date.now() + 3 * 3600 * 1000),
+                    expires: new Date(2024, 9, 19),
                     httpOnly: true
                 });
                 res.json({ token });

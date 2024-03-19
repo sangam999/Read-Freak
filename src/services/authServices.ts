@@ -41,7 +41,7 @@ export class AuthService {
                 throw new Error("Invalid password");
             }
 
-            const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET);
+            const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, {expiresIn: '4h'});
             return token;
         } catch (error) {
             console.error(error);

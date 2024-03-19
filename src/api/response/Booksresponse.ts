@@ -1,4 +1,5 @@
-import IBooksPage from "../../interfaces/IBooksPage";
+import
+    IBooksPage from "../../interfaces/IBooksPage";
 import {Review} from "./Review";
 
 export class Book {
@@ -8,7 +9,7 @@ export class Book {
     author: string;
     year: number;
     genre: string;
-    writeReview: string | undefined;
+    writeReview?: string;
     reviews?: Review[];
 
     constructor( book: IBooksPage) {

@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { BookService } from '../../services/Bookservices';
+import {auth} from "../middlewear/Auth";
 
 const bookService = new BookService();
 
@@ -20,9 +21,9 @@ export default (app: Router) => {
         res.json(book);
     });
 
-    app.delete("/deletebooks", async (req, res) => {
-        const { title } = req.body;
-        const book = await bookService.deleteBook(title);
+    app.get("/deletebooks/:id", auth, async (req, res) => {
+        const id: string = req.params.id;
+        const book = await bookService.deleteBook(id);
         res.json(book);
     });
 

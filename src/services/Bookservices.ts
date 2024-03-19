@@ -40,10 +40,9 @@ export class BookService {
         }
     }
 
-    async deleteBook(title: string) {
+    async deleteBook(id: string) {
         try {
-            const deleted = await booksModel.findOneAndDelete({ title: title });
-            return deleted;
+            await booksModel.findByIdAndDelete(id);
         } catch (err) {
             throw new Error((err as Error).message);
         }
