@@ -4,15 +4,15 @@ import bcrypt from "bcrypt";
 
 
 export class UserService {
-    static async createUser(username: string, password: string, email: string): Promise<IUser> {
+    async createUser(username: string, password: string, email: string): Promise<IUser> {
         try {
             // Check if the username or email is already taken
-            const existingUsername = await UserSchema.findOne({ username: username });
+            const existingUsername = await UserSchema.findOne({username: username});
             if (existingUsername) {
                 throw new Error("Username is already taken");
             }
 
-            const existingEmail = await UserSchema.findOne({ email: email });
+            const existingEmail = await UserSchema.findOne({email: email});
             if (existingEmail) {
                 throw new Error("Email is already registered");
             }
@@ -21,7 +21,7 @@ export class UserService {
             const hashedPassword = await bcrypt.hash(password, 10);
 
             // Create a new user object
-            const newUser: IUser = {
+            const newUser: { password: string; name: string; isActive: boolean; email: string } = {
                 name: username,
                 password: hashedPassword,
                 email: email,
@@ -33,11 +33,12 @@ export class UserService {
 
             return createdUser;
         } catch (error) {
-            throw new Error("Error creating user: " + error.message);
+
+            throw new Error((error as Error).message);
         }
     }
 
-    static async activateUser(userId: string): Promise<IUser | null> {
+     async activateUser(userId: string): Promise<IUser | null> {
         try {
             const user = await UserSchema.findById(userId);
             if (!user) {
@@ -48,11 +49,12 @@ export class UserService {
             await user.save();
             return user;
         } catch (error) {
-            throw new Error("Error activating user: " + error.message);
+
+            throw new Error((error as Error).message);
         }
     }
 
-    static async deactivateUser(userId: string): Promise<IUser | null> {
+    async deactivateUser(userId: string): Promise<IUser | null> {
         try {
             const user = await UserSchema.findById(userId);
             if (!user) {
@@ -63,7 +65,8 @@ export class UserService {
             await user.save();
             return user;
         } catch (error) {
-            throw new Error("Error deactivating user: " + error.message);
+            throw new Error((error as Error).message);
         }
     }
+
 }

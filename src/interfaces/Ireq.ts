@@ -1,8 +1,6 @@
 import User from '../interfaces/IUser';
+import { Request} from "express";
 
-
-export default interface ReqWithUser extends Request {
-    req: User;
-    cookies: any;
+export interface ReqWithUser extends Request {
     user?: User;
 }
