@@ -1,5 +1,5 @@
 import mongoose, { Model } from "mongoose";
-import IUser from "../../interfaces/IUser";
+import {IUser} from "../../interfaces/IUser";
 
 const { Schema, model } = require("mongoose");
 

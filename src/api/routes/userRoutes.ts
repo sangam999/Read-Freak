@@ -50,7 +50,7 @@ export default (app: Router) => {
         try {
             const decodedToken = await authService.verifyToken(token);
             if (decodedToken) {
-                res.json({ userId: decodedToken.userId, role: decodedToken.role });
+                res.json({ userId: decodedToken._id, role: decodedToken.role });
             } else {
                 res.status(401).send("Invalid token");
             }

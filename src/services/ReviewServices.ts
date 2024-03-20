@@ -15,7 +15,7 @@ import reviewSchema from "../model/schema/ReviewSchema";
         }
     }
 
-    async getReviewById(id: string): Promise<Ireviewpage []> {
+    async getReviewById(id: string): Promise<Ireviewpage[]> {
         try {
             return await ReviewSchema.find({bookId: id});
         } catch (error) {
@@ -23,18 +23,10 @@ import reviewSchema from "../model/schema/ReviewSchema";
         }
     }
 
-    async updateReview(id: string, updatedData: Partial<Ireviewpage>): Promise<Ireviewpage | null> {
-        try {
-           const review = await reviewSchema.findByIdAndUpdate(id, {$set: updatedData});
-            return review;
-       } catch (error) {
-           throw new Error(`Could not update review: ${error}`);
-      }
-   }
 
     async deleteReview(id: string) {
         try {
-            await ReviewSchema.deleteOne({_id : id });
+            await ReviewSchema.findByIdAndDelete(id);
         } catch (error) {
             throw new Error(`Could not delete review: ${error}`);
         }

@@ -1,4 +1,4 @@
-import IUser from "../interfaces/IUser";
+import {IUser} from "../interfaces/IUser";
 import UserSchema from "../model/schema/userSchema";
 import bcrypt from "bcrypt";
 
@@ -46,7 +46,6 @@ export class UserService {
             }
 
             user.isActive = true;
-            await user.save();
             return user;
         } catch (error) {
 

@@ -3,12 +3,13 @@ import express, {Request, Response, Router} from 'express';
 import Ireviewpage from "../../interfaces/Ireview";
 import bodyParser from "body-parser";
 import ReviewServices from "../../services/ReviewServices";
+import {auth} from "../middlewear/Auth";
 
 export default (app: Router) => {
     const reviewService = new ReviewServices();
 
 // Create a new review
-    app.post('/createreview', async (req: Request, res: Response) => {
+    app.post('/createreview',auth, async (req: Request, res: Response) => {
         try {
             const reviewData: Ireviewpage = req.body;
             const newReview = await reviewService.createReview(reviewData);
@@ -36,7 +37,7 @@ export default (app: Router) => {
     });
 
  //Update review
-    app.post('/updateReview/:id', async (req: Request, res: Response) => {
+    app.post('/updateReview/:id',auth, async (req: Request, res: Response) => {
         try {
             const id = req.params.id;
             const updatedData: Partial<Ireviewpage> = req.body;
@@ -54,7 +55,7 @@ export default (app: Router) => {
     })
 
 // Delete review
-    app.get('/deletereview/:id', async (req: Request, res: Response) => {
+    app.get('/deletereview/:id',auth, async (req: Request, res: Response) => {
         try {
             const id = req.params.id;
             await reviewService.deleteReview(id);

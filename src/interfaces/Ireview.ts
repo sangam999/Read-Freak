@@ -1,5 +1,4 @@
 import mongoose from "mongoose"
-import User from "./IUser";
 
 export default interface Ireviewpage {
     bookId: string;

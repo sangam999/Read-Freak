@@ -1,11 +1,11 @@
   import mongoose from "mongoose";
 
-  export default class userResponse {
+  export class userResponse {
       _id?: string;
       username: string;
       email: string;
       password?: string;
-      role?: ("user" | "admin")[];
+      role?: string;
       isActive: boolean;
 
       constructor(
@@ -13,7 +13,7 @@
           email: string,
           _id?: string,
           password?: string,
-          role?: ("user" | "admin")[],
+          role?: string,
           isActive: boolean = true // Assuming isActive defaults to true
       ) {
           this._id = _id;

@@ -3,6 +3,7 @@ import booksroutes from "./routes/Booksroutes";
 import reviewRoutes from "./routes/ReviewRoutes";
 import userRoutes from "./routes/userRoutes";
 import HomepageRoutes from "./routes/HomepageRoutes";
+import adminRoutes from "./routes/adminRoutes";
 
 export default () => {
     const app = Router();
@@ -10,7 +11,8 @@ export default () => {
     booksroutes(app);
     reviewRoutes(app);
     userRoutes(app);
-    HomepageRoutes(app)
+    HomepageRoutes(app);
+    adminRoutes(app)
 
 
 

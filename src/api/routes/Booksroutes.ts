@@ -1,30 +1,36 @@
 import { Request, Response, Router } from 'express';
 import { BookService } from '../../services/Bookservices';
 import {auth} from "../middlewear/Auth";
+import {adminAuthMiddleware} from "../middlewear/adminAuthMiddleware";
 
 const bookService = new BookService();
 
 export default (app: Router) => {
-    app.get("/books", async (req: Request, res: Response) => {
+    app.get("/books/:id", async (req: Request, res: Response) => {
         res.json(await bookService.getAllBooks());
     });
 
-    app.post("/addBooks", async (req, res) => {
+    app.post("/addbooks/:id",adminAuthMiddleware, async (req, res) => {
         const { title, author, year, genre } = req.body;
         const book = await bookService.addBook(title, author, year, genre);
         res.json(book);
     });
 
-    app.put("/updatebook", async (req, res) => {
+    app.put("/updatebooks/:id",adminAuthMiddleware, async (req, res) => {
         const { title, year } = req.body;
         const book = await bookService.updateBook(title, year);
         res.json(book);
     });
 
-    app.get("/deletebooks/:id", auth, async (req, res) => {
+    app.get("/deletebooks/:id",adminAuthMiddleware, async (req, res) => {
         const id: string = req.params.id;
-        const book = await bookService.deleteBook(id);
-        res.json(book);
+
+        try {
+            const book = await bookService.deleteBook(id);
+            res.send(book.message);
+        } catch (e) {
+            res.send("Invalid Request")
+        }
     });
 
     // Add route for searching books
