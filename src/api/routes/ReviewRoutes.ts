@@ -36,23 +36,6 @@ export default (app: Router) => {
         }
     });
 
- //Update review
-    app.post('/updateReview/:id',auth, async (req: Request, res: Response) => {
-        try {
-            const id = req.params.id;
-            const updatedData: Partial<Ireviewpage> = req.body;
-            const updatedReview = await reviewService.updateReview(id, updatedData);
-            if (!updatedReview) {
-                res.status(404).json({message: 'Review not found'});
-                return;
-            }
-            res.json(updatedReview);
-        } catch (error) {
-
-            // @ts-ignore
-            res.status(500).json({message: error.message});
-        }
-    })
 
 // Delete review
     app.get('/deletereview/:id',auth, async (req: Request, res: Response) => {
