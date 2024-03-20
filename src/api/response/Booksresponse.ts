@@ -9,7 +9,6 @@ export class Book {
     author: string;
     year: number;
     genre: string;
-    writeReview?: string;
     reviews?: Review[];
 
     constructor( book: IBooksPage) {
