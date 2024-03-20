@@ -43,8 +43,13 @@ export class BookService {
     async deleteBook(id: string) {
         try {
             await booksModel.findByIdAndDelete(id);
+            return {
+                message: "Book deleted successfully"
+            }
         } catch (err) {
-            throw new Error((err as Error).message);
+            return {
+                message: "Book not found"
+            }
         }
     }
 

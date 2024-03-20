@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import IUser from "../interfaces/IUser";
+import {IUser} from "../interfaces/IUser";
 import UserSchema from "../model/schema/userSchema";
 
 const JWT_SECRET = "your-secret-key";
@@ -9,12 +9,13 @@ export class AuthService {
     async signUp(username: string, password: string, email: string) {
         try {
             const genRanHex = this.hexaIdgen(16);const hashedPassword = await bcrypt.hash(password, 10);
-            const user: IUser = {
+            const user: { password: string; role: string; name: string; _id: string; email: string ,isActive:true} = {
                 _id: genRanHex,
                 name: username,
                 email: email,
                 password: hashedPassword,
-                role: "user"
+                role: "user",
+                isActive :true
             };
 
             const insertedUser = await UserSchema.create(user);
@@ -31,7 +32,7 @@ export class AuthService {
 
     async login(email: string, password: string) {
         try {
-            const user = await UserSchema.findOne({ email: email });
+            const user:IUser | null = await UserSchema.findOne({ email: email });
             if (!user) {
                 throw new Error("Invalid username");
             }
@@ -41,7 +42,13 @@ export class AuthService {
                 throw new Error("Invalid password");
             }
 
-            const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, {expiresIn: '4h'});
+            const token = jwt.sign( {
+                _id: user._id,
+                name: user.name,
+                email: email,
+                password: password,
+                role: user.role
+            }, JWT_SECRET, {expiresIn: '4h'});
             return token;
         } catch (error) {
             console.error(error);
@@ -51,7 +58,7 @@ export class AuthService {
 
     async verifyToken(token: string) {
         try {
-            const decodedToken = jwt.verify(token, JWT_SECRET) as { userId: string, role: string };
+            const decodedToken = jwt.verify(token, JWT_SECRET) as IUser;
             return decodedToken;
         } catch (error) {
             console.error(error);

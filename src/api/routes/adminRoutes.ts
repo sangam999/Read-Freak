@@ -25,16 +25,6 @@ export default (app: Router) => {
         }
     });
 
-// Login Route
-    app.post('/login', async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const {email, password} = req.body;
-            const token = await authService.login(email, password);
-            res.json({token});
-        } catch (error) {
-            next(error);
-        }
-    });
 
 // Activate User
     app.put('/user/:id/activate', adminAuthMiddleware, async (req: Request, res: Response, next: NextFunction) => {

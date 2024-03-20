@@ -3,7 +3,7 @@ import { AuthService } from "../../services/authServices";
 import { ReqWithUser } from "../../interfaces/Ireq";
 import jwt from "jsonwebtoken";
 import config from "../../config/config";
-import IUser from "../../interfaces/IUser";
+import {IUser} from "../../interfaces/IUser";
 
 const app = express();
 const authService = new AuthService(); // Initialize AuthService if not already initialized
@@ -16,7 +16,7 @@ export const adminAuthMiddleware = async (req: ReqWithUser, res: Response, next:
             throw new Error('Token not provided');
         }
         const decodedToken = jwt.verify(token, config.JWT_KEY as string) as IUser; // Assuming JWT_KEY is defined in config
-        if (decodedToken.role !== 'admin') {
+        if (decodedToken.role != 'admin') {
             throw new Error('Unauthorized');
         }
         req.user = decodedToken; // Change decoded to decodedToken
@@ -32,8 +32,3 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     res.status(500).json({ error: err.message || 'Internal Server Error' }); // Handle error message properly
 });
 
-// Start Server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
