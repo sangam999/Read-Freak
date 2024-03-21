@@ -3,7 +3,7 @@ import booksModel from "../model/schema/BooksSchema";
 import { Book, BookSection } from "../api/response/Booksresponse";
 
 export class BookService {
-    async getAllBooks(id: string): Promise<{
+    async getallbooks(id: string): Promise<{
         book: { year: number; author: string; genre: string; title: string };
         bookSection: BookSection
     }> {

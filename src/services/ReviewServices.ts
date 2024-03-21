@@ -9,9 +9,9 @@ import {Book} from "../api/response/Booksresponse";
 
 
  export class ReviewService {
-    async createReview(reviewData: Ireviewpage): Promise<Ireviewpage> {
+    async createReview(reviewData: Ireviewpage) {
         try {
-            const review = await reviewSchema.create(reviewData);
+            const review = await reviewSchema.insertMany([reviewData]);
             return review;
         } catch (error) {
             throw new Error(`Could not create review: ${error}`);

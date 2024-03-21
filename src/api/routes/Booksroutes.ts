@@ -3,6 +3,7 @@ import { BookService } from '../../services/Bookservices';
 import {auth} from "../middlewear/Auth";
 import {adminAuthMiddleware} from "../middlewear/adminAuthMiddleware";
 import IBooksPage from "../../interfaces/IBooksPage";
+import {BookSection} from "../response/Booksresponse";
 
 const bookService = new BookService();
 
@@ -10,7 +11,9 @@ export default (app: Router) => {
     app.get('/getAllBooks', async (req: Request, res: Response) => {
         try {
             const id: string = req.params.id;
-            const booksData :IBooksPage= req.body
+            const booksData : {
+                book: { year: number; author: string; genre: string; title: string };
+                bookSection: BookSection }= await bookService.getallbooks(id)
             if (!booksData) {
                 res.status(404).json({ message: 'Books not found' });
                 return;
