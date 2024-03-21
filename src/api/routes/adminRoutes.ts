@@ -27,7 +27,7 @@ export default (app: Router) => {
 
 
 // Activate User
-    app.put('/user/:id/activate', adminAuthMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+    app.get('/activate/:id', adminAuthMiddleware, async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userId = req.params.id;
             await userServices.activateUser(userId);
@@ -38,7 +38,7 @@ export default (app: Router) => {
     });
 
 // Deactivate User
-    app.put('/user/:id/deactivate', adminAuthMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+    app.get('/deactivate/:id', adminAuthMiddleware, async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userId = req.params.id;
             await userServices.deactivateUser(userId);

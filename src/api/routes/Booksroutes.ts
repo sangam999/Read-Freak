@@ -2,12 +2,24 @@ import { Request, Response, Router } from 'express';
 import { BookService } from '../../services/Bookservices';
 import {auth} from "../middlewear/Auth";
 import {adminAuthMiddleware} from "../middlewear/adminAuthMiddleware";
+import IBooksPage from "../../interfaces/IBooksPage";
 
 const bookService = new BookService();
 
 export default (app: Router) => {
-    app.get("/books/:id", async (req: Request, res: Response) => {
-        res.json(await bookService.getAllBooks());
+    app.get('/getAllBooks', async (req: Request, res: Response) => {
+        try {
+            const id: string = req.params.id;
+            const booksData :IBooksPage= req.body
+            if (!booksData) {
+                res.status(404).json({ message: 'Books not found' });
+                return;
+            }
+            res.json(booksData);
+        } catch (error) {
+            // @ts-ignore
+            res.status(500).json({ message: error.message });
+        }
     });
 
     app.post("/addbooks/:id",adminAuthMiddleware, async (req, res) => {
@@ -16,9 +28,9 @@ export default (app: Router) => {
         res.json(book);
     });
 
-    app.put("/updatebooks/:id",adminAuthMiddleware, async (req, res) => {
-        const { title, year } = req.body;
-        const book = await bookService.updateBook(title, year);
+    app.post("/updatebooks/:id",adminAuthMiddleware, async (req, res) => {
+        const id = req.params.id;
+        const book = await bookService.updateBook(id, req.body);
         res.json(book);
     });
 

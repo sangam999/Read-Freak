@@ -77,4 +77,15 @@ export default (app: Router) => {
             res.status(500).send("Error verifying token");
         }
     });
+    // Logout route
+    app.get("/logout", async (req: Request, res: Response) => {
+        try {
+            // Clear the authentication token by removing the cookie from the client
+            res.clearCookie("token");
+            res.json({ message: "Logout successful" });
+        } catch (error) {
+            console.error("Error logging out:", error);
+            res.status(500).send("Error logging out");
+        }
+    });
 }

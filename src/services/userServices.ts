@@ -47,29 +47,18 @@ export class UserService {
         }
     }
 
-    async activateUser(userId: string): Promise<userResponse | null> {
+    async activateUser(userId: string) {
         try {
-            const user = await UserSchema.findById(userId);
-            if (!user) {
-                throw new Error("User not found");
+            await UserSchema.findByIdAndUpdate(userId, {$set: {isActive: true}});
+
+            return {
+                message: 'User activated'
             }
 
-            user.isActive = true;
-            await user.save();
-
-            // Construct userResponse object
-            const response: userResponse = new userResponse(
-                user._id,
-                user.name,
-                user.email,
-                user.password,
-                user.role,
-                user.isActive
-            );
-
-            return response;
         } catch (error) {
-            throw new Error((error as Error).message);
+            return {
+                message: 'User not found/ Could not be activated'
+            }
         }
     }
 

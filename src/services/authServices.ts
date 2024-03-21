@@ -8,14 +8,15 @@ const JWT_SECRET = "your-secret-key";
 export class AuthService {
     async signUp(username: string, password: string, email: string) {
         try {
-            const genRanHex = this.hexaIdgen(16);const hashedPassword = await bcrypt.hash(password, 10);
-            const user: { password: string; role: string; name: string; _id: string; email: string ,isActive:true} = {
+            const genRanHex = this.hexaIdgen(16);
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const user: { password: string; role: string; name: string; _id: string; email: string, isActive: true } = {
                 _id: genRanHex,
                 name: username,
                 email: email,
                 password: hashedPassword,
                 role: "user",
-                isActive :true
+                isActive: true
             };
 
             const insertedUser = await UserSchema.create(user);
@@ -32,17 +33,17 @@ export class AuthService {
 
     async login(email: string, password: string) {
         try {
-            const user:IUser | null = await UserSchema.findOne({ email: email });
+            const user: IUser | null = await UserSchema.findOne({email: email});
             if (!user) {
                 throw new Error("Invalid username");
             }
 
-            const isPasswordValid =await bcrypt.compare(password, user.password);
+            const isPasswordValid = await bcrypt.compare(password, user.password);
             if (!isPasswordValid) {
                 throw new Error("Invalid password");
             }
 
-            const token = jwt.sign( {
+            const token = jwt.sign({
                 _id: user._id,
                 name: user.name,
                 email: email,
@@ -55,6 +56,16 @@ export class AuthService {
             throw new Error("Error logging in");
         }
     }
+     async logOut(): Promise<string> {
+        try {
+            // Generate a token with an expiration date in the past
+            const expiredToken = jwt.sign({ _id: 'user.id', name: 'user.name', email: 'user.email', role: 'user.role' }, JWT_SECRET, { expiresIn: 0 });
+            return expiredToken;
+        } catch (error) {
+            console.error("Error logging out:", error);
+            throw new Error("Error logging out");
+        }
+    }
 
     async verifyToken(token: string) {
         try {
@@ -65,4 +76,6 @@ export class AuthService {
             throw new Error("Invalid token");
         }
     }
+
+
 }

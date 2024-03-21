@@ -3,7 +3,7 @@ import booksModel from "../model/schema/BooksSchema";
 import { Book, BookSection } from "../api/response/Booksresponse";
 
 export class BookService {
-    async getBook(id: string): Promise<{
+    async getAllBooks(id: string): Promise<{
         book: { year: number; author: string; genre: string; title: string };
         bookSection: BookSection
     }> {
@@ -60,18 +60,24 @@ export class BookService {
         }
     }
 
-    async getAllBooks(): Promise<IBooksPage[]> {
-        return booksModel.find({});
-    }
 
-    async updateBook(title: string, year: string) {
+
+
+    async updateBook(id: string, body: Record<string, any>) {
+        if (!body) {
+            return {
+                message: "No data found for updating"
+            }
+        }
         try {
-            const updatebook = await booksModel.updateOne({ title: title }, { $set: { year: year } });
-            if (updatebook.modifiedCount) {
-                return updatebook;
+            await booksModel.findByIdAndUpdate(id, { $set: body });
+            return {
+                message: "Book updated successfully"
             }
         } catch (err) {
-            throw new Error((err as Error).message);
+            return {
+                message: "Book not updated"
+            }
         }
     }
 
@@ -80,13 +86,14 @@ export class BookService {
             await booksModel.findByIdAndDelete(id);
             return {
                 message: "Book deleted successfully"
-            }
-        } catch (err) {
+            };
+        } catch (error) {
             return {
                 message: "Book not found"
-            }
+            };
         }
     }
+
 
     async searchBooks(query: string): Promise<IBooksPage[]> {
         try {
@@ -103,3 +110,4 @@ export class BookService {
         }
     }
 }
+
