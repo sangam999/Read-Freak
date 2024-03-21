@@ -1,23 +1,37 @@
-import
-    IBooksPage from "../../interfaces/IBooksPage";
-import {Review} from "./Review";
+import IBooksPage from "../../interfaces/IBooksPage";
 
 export class Book {
-
-
     title: string;
     author: string;
     year: number;
     genre: string;
-    reviews?: Review[];
 
-    constructor( book: IBooksPage) {
-
+    constructor(book: IBooksPage) {
         this.title = book.title;
         this.author = book.author;
         this.year = parseInt(book.year);
         this.genre = book.genre;
-        this.reviews = [];
+    }
+}
 
+export class BookSection {
+    book: Book[];
+    bookCover: string;
+    summary: string;
+
+    constructor(
+        book: Book[],
+        bookCover: string,
+        summary: string)
+    {
+        this.book = book;
+        this.bookCover = this.constructBookCoverURL(bookCover);
+        this.summary = summary;
+
+    }
+
+    private constructBookCoverURL(bookCover: string): string {
+        const bookCoverURL = "https://via.placeholder.com/300"; // Example placeholder URL
+        return bookCoverURL;
     }
 }

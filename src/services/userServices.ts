@@ -1,18 +1,18 @@
-import {IUser} from "../interfaces/IUser";
+import { IUser } from "../interfaces/IUser";
 import UserSchema from "../model/schema/userSchema";
 import bcrypt from "bcrypt";
-
+import { userResponse } from "../api/response/userResponse"; // Assuming the userResponse class is defined in a file named userResponse.ts
 
 export class UserService {
-    async createUser(username: string, password: string, email: string): Promise<IUser> {
+    async createUser(username: string, password: string, email: string): Promise<userResponse> {
         try {
             // Check if the username or email is already taken
-            const existingUsername = await UserSchema.findOne({username: username});
+            const existingUsername = await UserSchema.findOne({ username: username });
             if (existingUsername) {
                 throw new Error("Username is already taken");
             }
 
-            const existingEmail = await UserSchema.findOne({email: email});
+            const existingEmail = await UserSchema.findOne({ email: email });
             if (existingEmail) {
                 throw new Error("Email is already registered");
             }
@@ -31,14 +31,23 @@ export class UserService {
             // Save the user to the database
             const createdUser = await UserSchema.create(newUser);
 
-            return createdUser;
-        } catch (error) {
+            // Construct userResponse object
+            const response: userResponse = new userResponse(
+                createdUser._id,
+                createdUser.name,
+                createdUser.email,
+                createdUser.password,
+                createdUser.role,
+                createdUser.isActive
+            );
 
+            return response;
+        } catch (error) {
             throw new Error((error as Error).message);
         }
     }
 
-     async activateUser(userId: string): Promise<IUser | null> {
+    async activateUser(userId: string): Promise<userResponse | null> {
         try {
             const user = await UserSchema.findById(userId);
             if (!user) {
@@ -46,14 +55,25 @@ export class UserService {
             }
 
             user.isActive = true;
-            return user;
-        } catch (error) {
+            await user.save();
 
+            // Construct userResponse object
+            const response: userResponse = new userResponse(
+                user._id,
+                user.name,
+                user.email,
+                user.password,
+                user.role,
+                user.isActive
+            );
+
+            return response;
+        } catch (error) {
             throw new Error((error as Error).message);
         }
     }
 
-    async deactivateUser(userId: string): Promise<IUser | null> {
+    async deactivateUser(userId: string): Promise<userResponse | null> {
         try {
             const user = await UserSchema.findById(userId);
             if (!user) {
@@ -62,10 +82,20 @@ export class UserService {
 
             user.isActive = false;
             await user.save();
-            return user;
+
+            // Construct userResponse object
+            const response: userResponse = new userResponse(
+                user._id,
+                user.name,
+                user.email,
+                user.password,
+                user.role,
+                user.isActive
+            );
+
+            return response;
         } catch (error) {
             throw new Error((error as Error).message);
         }
     }
-
 }
