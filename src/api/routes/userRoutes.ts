@@ -23,19 +23,13 @@ export default (app: Router) => {
     app.post("/login", async (req: Request, res: Response) => {
         const { email, password } = req.body;
         if (!email || !password) {
-            return res.status(400).send("Username and password are required");
+            return res.status(400).send("email and password are required");
         }
         try {
-            const token = await authService.login(email, password);
-            if (token) {
-                res.cookie("token", token, {
-                    expires: new Date(2024, 9, 19),
-                    httpOnly: true
-                });
-                res.json({ token });
-            } else {
-                return res.status(401).send("Invalid username or password");
-            }
+            // Call the login function from authService
+            const tokenData = await authService.login(email, password, res);
+            // If login is successful, token will be set in cookies automatically
+            res.json(tokenData);
         } catch (error) {
             console.error("Error logging in:", error);
             res.status(500).send("Error logging in");

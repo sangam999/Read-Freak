@@ -38,14 +38,15 @@ export default (app: Router) => {
 
 
 // Delete review
-    app.get('/deletereview/:id',auth, async (req: Request, res: Response) => {
+    app.delete('/deleteReview/:id', async (req: Request, res: Response) => {
+        const { id } = req.params;
         try {
-            const id = req.params.id;
             await reviewService.deleteReview(id);
-            res.status(200).json({message: "Deleted Successfully"});
+            return res.status(200).json({ message: 'Review deleted successfully' });
         } catch (error) {
+            console.error("Error deleting review:", error);
             // @ts-ignore
-            res.status(500).json({message: error.message});
+            return res.status(500).json({ message: error.message });
         }
     });
-}
+};

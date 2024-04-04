@@ -5,6 +5,9 @@ import ReviewSchema from "../model/schema/ReviewSchema";
 import reviewSchema from "../model/schema/ReviewSchema";
 import {Review, ReviewSection, WriteReview} from "../api/response/Review";
 import {Book} from "../api/response/Booksresponse";
+import {Schema} from "mongoose";
+import {ObjectId} from "mongodb"
+
 
 
 
@@ -39,18 +42,33 @@ import {Book} from "../api/response/Booksresponse";
          }
      }
 
-
-
-
      async deleteReview(id: string) {
-        try {
-            await ReviewSchema.findByIdAndDelete(id);
-        } catch (error) {
-            throw new Error(`Could not delete review: ${error}`);
-        }
-    }
+         try {
+             await ReviewSchema.findByIdAndDelete(id);
+         } catch (error) {
+             throw new Error(`Could not delete review: ${error}`);
+         }
+     }
 
-    //async getReviewsByUserId(userId: string): Promise<Ireviewpage[]> {
+
+
+
+     // async deleteReview(_id: string) {
+     //     try {
+     //         console.log("Deleting review with ID:", _id); // Log the ID before deletion
+     //         const deleted = await ReviewSchema.findByIdAndDelete(_id);
+     //         if (!deleted) {
+     //             throw new Error('Review not found');
+     //         }
+     //         return deleted;
+     //     } catch (error) {
+     //         @ts-ignore
+             // throw new Error(`Could not delete review: ${error.message}`);
+         // }
+     // }
+
+
+     //async getReviewsByUserId(userId: string): Promise<Ireviewpage[]> {
        // try {
            // const reviews = await reviewSchema.find({ user_id: userId });
            // return reviews;

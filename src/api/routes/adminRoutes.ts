@@ -27,7 +27,7 @@ export default (app: Router) => {
 
 
 // Activate User
-    app.get('/activate/:id', adminAuthMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+    app.get('/activate/:id',adminAuthMiddleware, async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userId = req.params.id;
             await userServices.activateUser(userId);

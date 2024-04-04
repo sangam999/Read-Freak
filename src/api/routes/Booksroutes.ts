@@ -10,22 +10,23 @@ const bookService = new BookService();
 export default (app: Router) => {
     app.get('/getAllBooks', async (req: Request, res: Response) => {
         try {
-            const id: string = req.params.id;
-            const booksData : {
-                book: { year: number; author: string; genre: string; title: string };
-                bookSection: BookSection }= await bookService.getallbooks(id)
+            const id: string = req.params.id; // Change to req.query.id if it's a query parameter
+            const booksData = await bookService.getallbooks(id);
+
             if (!booksData) {
                 res.status(404).json({ message: 'Books not found' });
                 return;
             }
+
             res.json(booksData);
         } catch (error) {
+            console.error("Error fetching books:", error);
             // @ts-ignore
             res.status(500).json({ message: error.message });
         }
     });
 
-    app.post("/addbooks/:id",adminAuthMiddleware, async (req, res) => {
+    app.post("/addbooks",adminAuthMiddleware, async (req, res) => {
         const { title, author, year, genre } = req.body;
         const book = await bookService.addBook(title, author, year, genre);
         res.json(book);

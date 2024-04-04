@@ -21,7 +21,7 @@ async function startServer() {
 
     // Use cookie-parser middleware
     app.use(cookieParser());
-    // app.use('/api/v1', userRoutes);
+    //app.use('/api/v1', userRoutes);
 
 
     app.get('/', (req: Request, res: Response) => {

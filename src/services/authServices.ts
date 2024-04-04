@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import {IUser} from "../interfaces/IUser";
 import UserSchema from "../model/schema/userSchema";
+import { Response } from 'express';
 
 const JWT_SECRET = "your-secret-key";
 
@@ -31,9 +32,9 @@ export class AuthService {
         return [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
     }
 
-    async login(email: string, password: string) {
+    async  login(email: string, password: string, res: Response) {
         try {
-            const user: IUser | null = await UserSchema.findOne({email: email});
+            const user: IUser | null = await UserSchema.findOne({ email: email });
             if (!user) {
                 throw new Error("Invalid username");
             }
@@ -47,15 +48,27 @@ export class AuthService {
                 _id: user._id,
                 name: user.name,
                 email: email,
-                password: password,
                 role: user.role
-            }, JWT_SECRET, {expiresIn: '4h'});
-            return token;
+            }, JWT_SECRET, { expiresIn: '4h' });
+
+            // Set the token in cookies in the response headers
+            res.cookie('token', token, {
+                httpOnly: true,
+                maxAge: 4 * 60 * 60 * 1000 // 4 hours in milliseconds
+            });
+
+            // Return token along with user ID and name
+            return {
+                token,
+                _id: user._id,
+                name: user.name
+            };
         } catch (error) {
             console.error(error);
             throw new Error("Error logging in");
         }
     }
+
      async logOut(): Promise<string> {
         try {
             // Generate a token with an expiration date in the past

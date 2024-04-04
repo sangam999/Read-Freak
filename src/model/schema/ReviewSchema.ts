@@ -6,7 +6,7 @@ import Ireviewpage from "../../interfaces/Ireview";
 
 const reviewSchema = new Schema(
     {
-        _id: { type: String, required: false},
+        _id: { type: String, required:false},
         bookId :{
             type: String,
             requried: true
