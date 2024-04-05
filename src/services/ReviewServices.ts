@@ -42,30 +42,34 @@ import {ObjectId} from "mongodb"
          }
      }
 
+    // async deleteReview(id: string) {
+    //     try {
+    //          await ReviewSchema.findByIdAndDelete(id);
+    //     } catch (error) {
+    //         throw new Error(`Could not delete review: ${error}`);
+    //      }
+    // }
+
+
+
+
      async deleteReview(id: string) {
          try {
-             await ReviewSchema.findByIdAndDelete(id);
+              console.log("Deleting review with ID:", id);
+             const review = await ReviewSchema.findById(id);
+
+            if (!review) {
+               throw new Error(`Review with ID ${id} not found`);
+              }
+
+              const deleted = await ReviewSchema.findByIdAndDelete(id);
+             return deleted;
          } catch (error) {
-             throw new Error(`Could not delete review: ${error}`);
+
+              // @ts-ignore
+             throw new Error(`Could not delete review: ${error.message}`);
          }
-     }
-
-
-
-
-     // async deleteReview(_id: string) {
-     //     try {
-     //         console.log("Deleting review with ID:", _id); // Log the ID before deletion
-     //         const deleted = await ReviewSchema.findByIdAndDelete(_id);
-     //         if (!deleted) {
-     //             throw new Error('Review not found');
-     //         }
-     //         return deleted;
-     //     } catch (error) {
-     //         @ts-ignore
-             // throw new Error(`Could not delete review: ${error.message}`);
-         // }
-     // }
+      }
 
 
      //async getReviewsByUserId(userId: string): Promise<Ireviewpage[]> {

@@ -4,7 +4,7 @@ import mongoose from "mongoose"
 export default interface IBooksPage {
     summary: string;
     bookCoverURL: string;
-    _id: string;
+    bookId: string;
     title: string;
     author:string;
     year: string;

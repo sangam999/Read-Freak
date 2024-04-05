@@ -3,8 +3,10 @@ import booksModel from "../model/schema/BooksSchema";
 import { Book, BookSection } from "../api/response/Booksresponse";
 
 export class BookService {
-    async  getallbooks(id: string): Promise<{
+
+    async getallbooks(id: string): Promise<{
         books: {
+            bookId: string; // Add bookId field
             year: number;
             author: string;
             genre: string;
@@ -13,7 +15,7 @@ export class BookService {
         bookSection: BookSection;
     }> {
         try {
-            const bookData: IBooksPage[] = await booksModel.find({ id: id });
+            const bookData: IBooksPage[] = await booksModel.find({id: id});
 
             if (bookData.length === 0) {
                 throw new Error("Books not found");
@@ -35,8 +37,10 @@ export class BookService {
                 bookData[0].summary // Assuming summary is a property in IBooksPage representing the book summary
             );
 
+            // Construct the response including bookId
             const response = {
                 books: books.map(book => ({
+                    bookId: book.bookId,
                     title: book.title,
                     author: book.author,
                     year: book.year,
@@ -73,8 +77,6 @@ export class BookService {
     }
 
 
-
-
     async updateBook(id: string, body: Record<string, any>) {
         if (!body) {
             return {
@@ -82,7 +84,7 @@ export class BookService {
             }
         }
         try {
-            await booksModel.findByIdAndUpdate(id, { $set: body });
+            await booksModel.findByIdAndUpdate(id, {$set: body});
             return {
                 message: "Book updated successfully"
             }
@@ -107,19 +109,21 @@ export class BookService {
     }
 
 
-    async searchBooks(query: string): Promise<IBooksPage[]> {
+    async searchBooks(title: string, body: Record<string, any>): Promise<IBooksPage | { message: string } | null> {
         try {
-            const books = await booksModel.find({
-                $or: [
-                    { title: { $regex: new RegExp(query, 'i') } },
-                    { author: { $regex: new RegExp(query, 'i') } },
-                    { genre: { $regex: new RegExp(query, 'i') } }
-                ]
-            });
-            return books;
+            if (!body) {
+                return { message: "No data found" };
+            }
+
+            // Use your data model or repository to search for books by title
+            const result = await booksModel.findOne({ title: title });
+
+            return result;
         } catch (error) {
+            // Handle any errors that occur during the search
             throw new Error((error as Error).message);
         }
     }
+
 }
 

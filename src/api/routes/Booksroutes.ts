@@ -4,6 +4,7 @@ import {auth} from "../middlewear/Auth";
 import {adminAuthMiddleware} from "../middlewear/adminAuthMiddleware";
 import IBooksPage from "../../interfaces/IBooksPage";
 import {BookSection} from "../response/Booksresponse";
+import booksModel from "../../model/schema/BooksSchema";
 
 const bookService = new BookService();
 
@@ -14,7 +15,7 @@ export default (app: Router) => {
             const booksData = await bookService.getallbooks(id);
 
             if (!booksData) {
-                res.status(404).json({ message: 'Books not found' });
+                res.status(404).json({message: 'Books not found'});
                 return;
             }
 
@@ -22,23 +23,23 @@ export default (app: Router) => {
         } catch (error) {
             console.error("Error fetching books:", error);
             // @ts-ignore
-            res.status(500).json({ message: error.message });
+            res.status(500).json({message: error.message});
         }
     });
 
-    app.post("/addbooks",adminAuthMiddleware, async (req, res) => {
-        const { title, author, year, genre } = req.body;
+    app.post("/addbooks", adminAuthMiddleware, async (req, res) => {
+        const {title, author, year, genre} = req.body;
         const book = await bookService.addBook(title, author, year, genre);
         res.json(book);
     });
 
-    app.post("/updatebooks/:id",adminAuthMiddleware, async (req, res) => {
+    app.post("/updatebooks/:id", adminAuthMiddleware, async (req, res) => {
         const id = req.params.id;
         const book = await bookService.updateBook(id, req.body);
         res.json(book);
     });
 
-    app.get("/deletebooks/:id",adminAuthMiddleware, async (req, res) => {
+    app.get("/deletebooks/:id", adminAuthMiddleware, async (req, res) => {
         const id: string = req.params.id;
 
         try {
@@ -50,9 +51,26 @@ export default (app: Router) => {
     });
 
     // Add route for searching books
-    app.get("/books/search", async (req, res) => {
-        const { query } = req.query;
-        const books = await bookService.searchBooks(query as string);
-        res.json(books);
+    app.post('/books/search', async (req, res) => {
+        try {
+            // Extract the title from the request body
+            const {title} = req.body;
+
+            // Call the searchBooks function from your service with the title and the request body
+            const result = await bookService.searchBooks(title, req.body);
+
+
+            // @ts-ignore
+            if (!result || result.message) {
+                return res.status(404).json({message: 'No books found'});
+            }
+
+            // If books are found, return them
+            return res.status(200).json(result);
+        } catch (error) {
+            // Handle any errors that occur during the search
+            // @ts-ignore
+            return res.status(500).json({message: error.message});
+        }
     });
 }
