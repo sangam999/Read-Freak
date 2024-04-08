@@ -2,7 +2,7 @@ import booksModel from '../model/schema/BooksSchema';
 import IBooksPage from '../interfaces/IBooksPage';
 import wishListsModel from '../model/schema/WishLists'
 import {Homepage} from '../api/response/homepage';
-import {WishList, WishlistButton} from "../api/response/WishList";
+import {AddWishlist, WishList, WishListSection} from "../api/response/WishList";
 import {Recommendation} from '../api/response/Recommendation';
 import IWishLists from "../interfaces/IWishLists";
 import wishLists from "../model/schema/WishLists";
@@ -15,15 +15,15 @@ export class HomepageServices {
             const recommendation = await this.getRecommendation();
             const banner = 'Greetings';
 
-            const wishLists = await this.getWishLists(userId)
-
-            const response: Homepage = new Homepage(banner, recommendation, wishLists);
+            // Removing wishlists from the method
+            const response: Homepage = new Homepage(banner, recommendation);
 
             return response;
         } catch (err) {
             throw new Error((err as Error).message);
         }
     }
+
 
     async getRecommendation(recentlyViewed?: IBooksPage[]): Promise<Recommendation[]> {
         try {
@@ -39,29 +39,39 @@ export class HomepageServices {
         }
     }
 
-    async getWishLists(userId: string): Promise<WishList[]> {
+    async getWishLists(userId: string): Promise<{
+        wishListSection: WishListSection;
+    }> {
         try {
-            const list: WishList[] = [];
-            const wishLists: IWishLists[] = await wishListsModel.find({ userId: userId });
+            const wishListData: IWishLists[] = await wishListsModel.find({ userId: userId });
+            const addWishList: AddWishlist = new AddWishlist('Add WishList', 'http://localhost:3000/addwishlist');
 
-            // Assuming wishlistButton is a new Button instance with type "add" and link "/wishlist/add"
-            const wishlistButton = new WishlistButton("add", "/wishlist/add");
+            const wishLists: WishList[] = [];
 
-            for (const wishlistItem of wishLists) {
-                list.push(new WishList(
-                    wishlistItem.bookId,
-                    wishlistItem.userId,
-                    wishlistItem.title,
-                    wishlistItem.author,
-                    wishlistItem.genre,
-                    wishlistButton
-                ));
+            for (const wishListItem of wishListData) {
+                const wishList: WishList = new WishList(
+                    wishListItem.bookId,
+                    wishListItem.userId,
+                    wishListItem.title,
+                    wishListItem.author,
+                    wishListItem.genre,
+
+                );
+                wishLists.push(wishList);
             }
 
-            return list;
-        } catch (err) {
-            throw new Error((err as Error).message);
+            const wishListSection: WishListSection = new WishListSection(wishLists,addWishList);
+
+            const response = {
+                wishListSection: wishListSection
+            };
+
+            return response;
+        } catch (error) {
+            console.error("Error fetching wishlists:", error);
+            throw new Error("Failed to fetch wishlists");
         }
     }
+
 
 }

@@ -4,7 +4,7 @@ import {WishList} from "../api/response/WishList";
 export default interface IHomePage {
     banner: string;
     recommendations: Recommendation[];
-    whistLists: WishList[];
+
 
 
 }

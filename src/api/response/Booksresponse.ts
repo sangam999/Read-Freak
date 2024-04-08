@@ -1,8 +1,7 @@
 import IBooksPage from "../../interfaces/IBooksPage";
 
-const baseUrl = "https://via.placeholder.com";
-const bookCoverURL = "https://via.placeholder.com/300"; // Example placeholder URL
-const endpoint = "300";
+const baseUrl = "http://localhost:3000/";
+const endpoint = "deletebooks";
 
 export class Book {
     bookId: string;
@@ -11,7 +10,7 @@ export class Book {
     year: number;
     genre: string;
     delete: string;
-    button?: Button; // Add button property
+
 
     constructor(book: IBooksPage, button?: Button) {
         this.bookId = book.bookId;
@@ -19,12 +18,13 @@ export class Book {
         this.author = book.author;
         this.year = parseInt(book.year);
         this.genre = book.genre;
-        this.delete = baseUrl + endpoint + "/" + book.bookId; // Constructing delete URL for a book
-        this.button = button; // Assign button if provided
+        this.delete = baseUrl + endpoint + book.bookId;
+
     }
 }
 
 export class Button {
+
     type: string;
     link: string;
 
@@ -34,26 +34,32 @@ export class Button {
     }
 }
 
+export class AddBook{
+    text: string;
+    link:string;
+    button?:Button
+
+    constructor(
+        text: string,
+        link:string,
+        button?: Button
+    ) {
+        this.text = text;
+        this.link = link;
+        this.button = button;
+    }
+}
+
 export class BookSection {
     books: Book[];
-    bookCover: string;
-    summary: string;
-    button?: Button; // Add button property
+    button?: AddBook | undefined; // Add button property
 
     constructor(
         books: Book[],
-        bookCover: string,
-        summary: string,
-        button?: Button // Accept button parameter
+        button?: AddBook // Accept button parameter
     ) {
         this.books = books;
-        this.bookCover = this.constructBookCoverURL(bookCover);
-        this.summary = summary;
         this.button = button; // Assign button if provided
     }
 
-    private constructBookCoverURL(bookCover: string): string {
-        const bookCoverURL = "https://via.placeholder.com/300"; // Example placeholder URL
-        return bookCoverURL;
-    }
 }

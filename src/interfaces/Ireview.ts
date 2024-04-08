@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 
 export default interface Ireviewpage {
-    _id?: string;
+    _id: string;
     bookId: string;
     rating: string;
     reviewText:string;

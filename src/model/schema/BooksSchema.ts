@@ -3,7 +3,10 @@ import mongoose, {Model, Schema} from "mongoose";
 
 const booksSchema = new Schema(
     {
-        _id : String,
+        BookId :{
+            type:String,
+            required:true
+        },
         title :{
             type: String,
             required: true
