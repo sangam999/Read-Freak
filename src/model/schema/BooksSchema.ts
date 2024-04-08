@@ -3,7 +3,7 @@ import mongoose, {Model, Schema} from "mongoose";
 
 const booksSchema = new Schema(
     {
-        BookId :{
+        _id :{
             type:String,
             required:true
         },

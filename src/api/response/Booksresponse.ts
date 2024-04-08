@@ -4,7 +4,7 @@ const baseUrl = "http://localhost:3000/";
 const endpoint = "deletebooks";
 
 export class Book {
-    bookId: string;
+    _id: string;
     title: string;
     author: string;
     year: number;
@@ -13,12 +13,12 @@ export class Book {
 
 
     constructor(book: IBooksPage, button?: Button) {
-        this.bookId = book.bookId;
+        this._id = book._id;
         this.title = book.title;
         this.author = book.author;
         this.year = parseInt(book.year);
         this.genre = book.genre;
-        this.delete = baseUrl + endpoint + book.bookId;
+        this.delete = baseUrl + endpoint + book._id;
 
     }
 }

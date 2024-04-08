@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 
 export default interface IBooksPage {
-    bookId: string;
+    _id: string;
     title: string;
     author:string;
     year: string;
