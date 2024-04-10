@@ -27,6 +27,22 @@ export default (app: Router) => {
         }
     });
 
+    app.get('/getbook/:id', async (req: Request, res: Response) => {
+        const id = req.params.id;
+
+        try {
+            const  bookSection  = await bookService.getBookById(id) ;
+
+            res.status(200).json(bookSection); // Send the bookSection as JSON response
+        } catch (error) {
+            console.error('Error getting book by ID:', error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    });
+
+
+
+
     app.post("/addbooks", adminAuthMiddleware, async (req, res) => {
         const {title, author, year, genre} = req.body;
         const book = await bookService.addBook(title, author, year, genre);

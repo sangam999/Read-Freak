@@ -33,6 +33,26 @@ export class BookService {
         }
     }
 
+    async  getBookById(id: string): Promise<{ bookSection: BookSection }> {
+        try {
+            const bookData: IBooksPage | null = await booksModel.findOne({ _id: id });
+
+            if (!bookData) {
+                throw new Error("Book not found");
+            }
+
+            const addBook: AddBook = new AddBook('Add Book', 'http://localhost:3000/addbooks');
+            const book: Book = new Book(bookData);
+            const bookSection: BookSection = new BookSection([book], addBook);
+
+            return { bookSection };
+        } catch (error) {
+            console.error("Error fetching book:", error);
+            throw new Error("Failed to fetch book");
+        }
+    }
+
+
 
     async addBook(title: string, author: string, year: string, genre: string) {
         const id = `book_${title.toLowerCase().split(" ").join("_")}`;
