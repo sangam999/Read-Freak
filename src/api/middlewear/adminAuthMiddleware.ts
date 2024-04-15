@@ -6,7 +6,7 @@ import config from "../../config/config";
 import {IUser} from "../../interfaces/IUser";
 
 const app = express();
-const authService = new AuthService(); // Initialize AuthService if not already initialized
+const authService = new AuthService();
 
 // Admin Authentication Middleware
 export const adminAuthMiddleware = async (req:Request, res: Response, next: NextFunction) => {

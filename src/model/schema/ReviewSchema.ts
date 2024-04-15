@@ -1,12 +1,18 @@
 
-import mongoose, {Model, Schema} from "mongoose";
+import mongoose, {Model} from "mongoose";
 import Ireviewpage from "../../interfaces/Ireview";
+const { Schema, model } = require("mongoose");
+
 
 
 
 const reviewSchema = new Schema(
     {
-        _id: { type: String, required:false},
+        _id: {
+            type: String,
+            required:true
+        },
+
         bookId :{
             type: String,
             requried: true
@@ -28,7 +34,7 @@ const reviewSchema = new Schema(
             type: Number,
             required: true,
         }
-    },)
+    });
 const reviewpageModel: Model<Ireviewpage> = mongoose.model<Ireviewpage>('review',reviewSchema);
 
 export default reviewpageModel;

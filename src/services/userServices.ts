@@ -28,10 +28,8 @@ export class UserService {
                 isActive: true // user is active by default
             };
 
-            // Save the user to the database
             const createdUser = await UserSchema.create(newUser);
 
-            // Construct userResponse object
             const response: userResponse = new userResponse(
                 createdUser._id,
                 createdUser.name,
@@ -72,7 +70,6 @@ export class UserService {
             user.isActive = false;
             await user.save();
 
-            // Construct userResponse object
             const response: userResponse = new userResponse(
                 user._id,
                 user.name,

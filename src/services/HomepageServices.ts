@@ -39,9 +39,7 @@ export class HomepageServices {
         }
     }
 
-    async getWishLists(userId: string): Promise<{
-        wishListSection: WishListSection;
-    }> {
+    async getWishLists(userId: string): Promise<WishListSection> {
         try {
             const wishListData: IWishLists[] = await wishListsModel.find({ userId: userId });
             const addWishList: AddWishlist = new AddWishlist('Add WishList', 'http://localhost:3000/addwishlist');
@@ -62,11 +60,7 @@ export class HomepageServices {
 
             const wishListSection: WishListSection = new WishListSection(wishLists,addWishList);
 
-            const response = {
-                wishListSection: wishListSection
-            };
-
-            return response;
+            return wishListSection;
         } catch (error) {
             console.error("Error fetching wishlists:", error);
             throw new Error("Failed to fetch wishlists");

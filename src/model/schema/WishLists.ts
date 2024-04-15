@@ -8,7 +8,7 @@ const { Schema, model } = require("mongoose");
 const wishListsSchema = new Schema(
     {
 
-        book_id :{
+        book_Id :{
             type: String,
             requried: true
         },

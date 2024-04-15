@@ -7,6 +7,7 @@ import {Review, ReviewSection, WriteReview} from "../api/response/Review";
 import {Book} from "../api/response/Booksresponse";
 import {Schema} from "mongoose";
 import {ObjectId} from "mongodb"
+import booksModel from "../model/schema/BooksSchema";
 
 
 
@@ -14,76 +15,89 @@ import {ObjectId} from "mongodb"
  export class ReviewService {
      async createReview(reviewData: Ireviewpage) {
          try {
-             const review = await reviewSchema.insertMany([reviewData]);
+             const review = await reviewSchema.insertMany(reviewData);
              return review;
          } catch (error) {
              throw new Error(`Could not create review: ${error}`);
          }
      }
 
-     async getReviewById(bookid: string): Promise<ReviewSection> {
+     async getReviewById(bookId: string): Promise<Review | null> {
          try {
-             const reviewData: Ireviewpage[] = await ReviewSchema.find({bookId: bookid});
-             const writeReview: WriteReview = new WriteReview('writeReview',
-                 'http://localhost:3000/createreview',
-             )
+             const reviewData: Ireviewpage | null = await ReviewSchema.findOne({bookId: bookId});
 
-             const reviews: Review[] = [];
-
-             for (const review of reviewData) {
-                 reviews.push(new Review(review));
+             if (!reviewData) {
+                 throw new Error("Review not found");
              }
 
-             const response: ReviewSection = new ReviewSection(reviews, writeReview);
+             const review: Review = new Review(reviewData);
 
-             return response
+             const writeReview: WriteReview = new WriteReview('writeReview', 'http://localhost:3000/createreview');
+
+             const response: ReviewSection = new ReviewSection([review], writeReview);
+
+             return review;
          } catch (err) {
              throw new Error((err as Error).message);
          }
      }
 
-     async deleteReview(id: string) {
+     async getReviews(bookId: string): Promise<ReviewSection> {
          try {
-             await ReviewSchema.findByIdAndDelete(id);
-         } catch (error) {
-             throw new Error(`Could not delete review: ${error}`);
+             const reviewData: Ireviewpage[] = await ReviewSchema.find({bookId: bookId});
+
+             if (!reviewData) {
+                 throw new Error("Review not found");
+             }
+
+             const reviews: Review[] = []
+             for (const reviewsInfo of reviewData) {
+                 const review: Review = new Review(reviewsInfo);
+                 reviews.push(review);
+             }
+
+             const writeReview: WriteReview = new WriteReview('writeReview', 'http://localhost:3000/createreview');
+
+             const reviewSection: ReviewSection = new ReviewSection(reviews, writeReview);
+
+             return reviewSection;
+         } catch (err) {
+             throw new Error((err as Error).message);
          }
      }
- }
 
 
+     async deletereview(_id: string) {
+         try {
+             await reviewSchema.findByIdAndDelete(_id);
+             return {
+                 message: "review deleted successfully"
+             };
+         } catch (error) {
+             return {
+                 message: "review not found"
+             };
+         }
+     }
 
 
-    //async deleteReview(id: string) {
-       //  try {
-            //  console.log("Deleting review with ID:", id);
-          //   const review = await ReviewSchema.findById(id);
+     //async deleteReview(id: string) {
+     //  try {
+     //  console.log("Deleting review with ID:", id);
+     //   const review = await ReviewSchema.findById(id);
 
-      //      if (!review) {
-        //       throw new Error(`Review with ID ${id} not found`);
-         //     }
+     //      if (!review) {
+     //       throw new Error(`Review with ID ${id} not found`);
+     //     }
 
-           //   const deleted = await ReviewSchema.findByIdAndDelete(id);
-         //    return deleted;
-    //     } catch (error) {
+     //   const deleted = await ReviewSchema.findByIdAndDelete(id);
+     //    return deleted;
+     //     } catch (error) {
 
-              // @ts-ignore
-           //  throw new Error(`Could not delete review: ${error.message}`);
+     // @ts-ignore
+     //  throw new Error(`Could not delete review: ${error.message}`);
      //    }
-  //    }
+     //    }
 
 
-     //async getReviewsByUserId(userId: string): Promise<Ireviewpage[]> {
-       // try {
-           // const reviews = await reviewSchema.find({ user_id: userId });
-           // return reviews;
-      //  } catch (error) {
-          //  throw new Error(`Could not fetch reviews: ${error}`);
-        //}
-   // }
-
-
-    // Add more methods as needed for fetching reviews by book ID, filtering, etc.
-
-
-export default ReviewService;
+ }

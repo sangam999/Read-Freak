@@ -6,9 +6,7 @@ import { AddBook, Book, BookSection } from "../api/response/Booksresponse";
 
 export class BookService {
 
-    async getallbooks(id: string): Promise<{
-        bookSection: BookSection;
-    }> {
+    async getallbooks(id: string): Promise<BookSection> {
         try {
             const bookData: IBooksPage[] = await booksModel.find({ bookId: id });
             const addBook: AddBook = new AddBook('Add Book', 'http://localhost:3000/addbooks');
@@ -22,18 +20,16 @@ export class BookService {
 
             const bookSection: BookSection = new BookSection(books, addBook);
 
-            const response = {
-                bookSection: bookSection
-            };
 
-            return response;
+
+            return bookSection;
         } catch (error) {
             console.error("Error fetching books:", error);
             throw new Error("Failed to fetch books");
         }
     }
 
-    async  getBookById(id: string): Promise<{ bookSection: BookSection }> {
+    async  getBookById(id: string): Promise<Book> {
         try {
             const bookData: IBooksPage | null = await booksModel.findOne({ _id: id });
 
@@ -45,7 +41,7 @@ export class BookService {
             const book: Book = new Book(bookData);
             const bookSection: BookSection = new BookSection([book], addBook);
 
-            return { bookSection };
+            return book ;
         } catch (error) {
             console.error("Error fetching book:", error);
             throw new Error("Failed to fetch book");
@@ -55,7 +51,7 @@ export class BookService {
 
 
     async addBook(title: string, author: string, year: string, genre: string) {
-        const id = `book_${title.toLowerCase().split(" ").join("_")}`;
+        const id =`book_${title.toLowerCase().split(" ").join("_")}`;
         const book: { year: string; author: string; genre: string; _id: string; title: string } = {
             _id: id,
             title: title,
@@ -105,12 +101,10 @@ export class BookService {
 
     async searchBooks(title: string, body:Request): Promise<IBooksPage | { message: string } | null> {
         try {
-            // Use your data model or repository to search for books by title
             const result = await booksModel.findOne({ title: title });
 
             return result;
         } catch (error) {
-            // Handle any errors that occur during the search
             throw new Error((error as Error).message);
         }
     }
