@@ -10,7 +10,7 @@ const reviewSchema = new Schema(
     {
         _id: {
             type: String,
-            required:true
+            required:false
         },
 
         bookId :{
@@ -31,7 +31,7 @@ const reviewSchema = new Schema(
             required: true,
         },
         reviewDate: {
-            type: Number,
+            type: Date,
             required: true,
         }
     });

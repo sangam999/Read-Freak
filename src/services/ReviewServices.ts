@@ -22,7 +22,7 @@ import booksModel from "../model/schema/BooksSchema";
          }
      }
 
-     async getReviewById(bookId: string): Promise<Review | null> {
+     async getReviewById(bookId: string): Promise<Review> {
          try {
              const reviewData: Ireviewpage | null = await ReviewSchema.findOne({bookId: bookId});
 
@@ -42,9 +42,9 @@ import booksModel from "../model/schema/BooksSchema";
          }
      }
 
-     async getReviews(bookId: string): Promise<ReviewSection> {
+     async getallReviews(id: string): Promise<ReviewSection> {
          try {
-             const reviewData: Ireviewpage[] = await ReviewSchema.find({bookId: bookId});
+             const reviewData: Ireviewpage[] = await ReviewSchema.find({id:id});
 
              if (!reviewData) {
                  throw new Error("Review not found");
@@ -65,20 +65,26 @@ import booksModel from "../model/schema/BooksSchema";
              throw new Error((err as Error).message);
          }
      }
-
-
-     async deletereview(_id: string) {
+     async deleteReview(id:string) {
          try {
-             await reviewSchema.findByIdAndDelete(_id);
-             return {
-                 message: "review deleted successfully"
-             };
+             const deletedReview = await reviewSchema.findByIdAndDelete(id);
+             if (!deletedReview) {
+                 throw new Error("Review not found");
+             }
+             return "Review deleted successfully";
          } catch (error) {
-             return {
-                 message: "review not found"
-             };
+             throw new Error(`Error deleting review: ${error}`);
          }
      }
+ }
+
+
+
+
+
+
+
+
 
 
      //async deleteReview(id: string) {
@@ -100,4 +106,4 @@ import booksModel from "../model/schema/BooksSchema";
      //    }
 
 
- }
+

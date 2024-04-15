@@ -61,7 +61,9 @@ export class AuthService {
             return {
                 token,
                 _id: user._id,
-                name: user.name
+                name: user.name,
+                role: user.role
+
             };
         } catch (error) {
             console.error(error);

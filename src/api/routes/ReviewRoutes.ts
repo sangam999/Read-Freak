@@ -35,11 +35,11 @@ export default (app: Router) => {
             res.status(500).json({message: error.message});
         }
     });
-
-    app.get('/getreviews/:bookId', async (req: Request, res: Response) => {
+// Get All reviews
+    app.get('/getallreviews', async (req: Request, res: Response) => {
         try {
-            const bookId = req.params.bookId;
-            const review = await reviewService.getReviews(bookId);
+            const id = req.params.id;
+            const review = await reviewService.getallReviews(id);
             if (!review) {
                 res.status(404).json({message: 'Review not found'});
                 return;
@@ -52,17 +52,15 @@ export default (app: Router) => {
     });
 
 
-
-
 // Delete review
-    app.delete('/deleteReview/:id',auth, async (req: Request, res: Response) => {
-        const { _id } = req.params;
+    app.delete('/deletereview/:id',auth,async (req, res) => {
+        const id = req.params.id;
         try {
-            await reviewService.deletereview(_id);
-            return res.status(200).json({ message: 'Review deleted successfully' });
+            const review = await reviewService.deleteReview(id);
+            res.status(200).json({ message:review });
         } catch (error) {
-            console.error("Error deleting review:", error);
-            return res.status(500).json( "error in deleteing review" );
+            // @ts-ignore
+            res.status(500).json({ error: error.message });
         }
     });
 };

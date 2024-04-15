@@ -4,18 +4,19 @@ const baseUrl = "http://localhost:3000/";
 const endpoint = "deletereview";
 
 export class Review {
+    _id?:string;
     bookid: string;
     rating: string;
     reviewText:string;
     reviewBy:string;
-    reviewDate: string;
+    reviewDate:string;
     delete:string;
 
     constructor(
         review: Ireviewpage
     )    {
 
-
+        this._id= review._id
         this.bookid =review.bookId;
         this.rating =review.rating;
         this.reviewText=review.reviewText;
