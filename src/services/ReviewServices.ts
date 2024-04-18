@@ -42,9 +42,9 @@ import booksModel from "../model/schema/BooksSchema";
          }
      }
 
-     async getallReviews(id: string): Promise<ReviewSection> {
+     async getallReviews(bookId: string): Promise<ReviewSection> {
          try {
-             const reviewData: Ireviewpage[] = await ReviewSchema.find({id:id});
+             const reviewData: Ireviewpage[] = await ReviewSchema.find({bookId:bookId});
 
              if (!reviewData) {
                  throw new Error("Review not found");
@@ -65,15 +65,17 @@ import booksModel from "../model/schema/BooksSchema";
              throw new Error((err as Error).message);
          }
      }
-     async deleteReview(id:string) {
+
+     async deletereview(id: string) {
          try {
-             const deletedReview = await reviewSchema.findByIdAndDelete(id);
-             if (!deletedReview) {
-                 throw new Error("Review not found");
-             }
-             return "Review deleted successfully";
+             await reviewSchema.findByIdAndDelete(id);
+             return {
+                 message: "review deleted successfully"
+             };
          } catch (error) {
-             throw new Error(`Error deleting review: ${error}`);
+             return {
+                 message: "review  not found"
+             };
          }
      }
  }

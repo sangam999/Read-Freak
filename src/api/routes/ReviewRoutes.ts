@@ -36,7 +36,7 @@ export default (app: Router) => {
         }
     });
 // Get All reviews
-    app.get('/getallreviews', async (req: Request, res: Response) => {
+    app.get('/getreviews/:id',async (req: Request, res: Response) =>{
         try {
             const id = req.params.id;
             const review = await reviewService.getallReviews(id);
@@ -56,7 +56,7 @@ export default (app: Router) => {
     app.delete('/deletereview/:id',auth,async (req, res) => {
         const id = req.params.id;
         try {
-            const review = await reviewService.deleteReview(id);
+            const review = await reviewService.deletereview(id);
             res.status(200).json({ message:review });
         } catch (error) {
             // @ts-ignore
