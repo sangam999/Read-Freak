@@ -53,7 +53,7 @@ export default (app: Router) => {
         res.json(book);
     });
 
-    app.get("/deletebooks/:id", adminAuthMiddleware, async (req, res) => {
+    app.delete("/deletebooks/:id", adminAuthMiddleware, async (req, res) => {
         const id: string = req.params.id;
 
         try {

@@ -8,8 +8,6 @@ const { Schema, model } = require("mongoose");
 
 const reviewSchema = new Schema(
     {
-
-
         bookId :{
             type: String,
             requried: true
