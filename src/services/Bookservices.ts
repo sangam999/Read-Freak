@@ -99,15 +99,16 @@ export class BookService {
         }
     }
 
-    async searchBooks(title: string, body: Request): Promise<IBooksPage | { message: string } | null> {
+    async searchBooks(title: string, body: Request): Promise<IBooksPage[] | { message: string } | null> {
         try {
             const regex = new RegExp(title, 'i');
-            const result = await booksModel.findOne({ title: { $regex: regex } });
+            const result = await booksModel.find({ title: { $regex: regex } });
 
             return result;
         } catch (error) {
             throw new Error(`An error occurred while searching for books: ${(error as Error).message}`);
         }
     }
+
 
 }
