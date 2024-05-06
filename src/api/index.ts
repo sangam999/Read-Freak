@@ -4,6 +4,8 @@ import reviewRoutes from "./routes/ReviewRoutes";
 import userRoutes from "./routes/userRoutes";
 import HomepageRoutes from "./routes/HomepageRoutes";
 import adminRoutes from "./routes/adminRoutes";
+import addWishlist from "./routes/Wishlists";
+import Wishlists from "./routes/Wishlists";
 
 export default () => {
     const app = Router();
@@ -12,7 +14,8 @@ export default () => {
     reviewRoutes(app);
     userRoutes(app);
     HomepageRoutes(app);
-    adminRoutes(app)
+    adminRoutes(app);
+    Wishlists(app)
 
 
 

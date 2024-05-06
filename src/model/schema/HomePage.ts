@@ -10,20 +10,13 @@ const homepageSchema = new Schema(
 
         banner :{
             type: String,
-            requried: true
+            requried: true,
         },
         recommendations: {
             type: String,
             required: true,
         },
-        wishLists: {
-            type: String,
-            required: true,
-        },
-        recentactivity: {
-            type : String,
-            required : true,
-        }
+
     },)
 const HomePageModel: Model<IHomePage> = mongoose.model<IHomePage>('Home', homepageSchema);
 

@@ -1,7 +1,6 @@
-import { IUser } from "../interfaces/IUser";
 import UserSchema from "../model/schema/userSchema";
 import bcrypt from "bcrypt";
-import { userResponse } from "../api/response/userResponse"; // Assuming the userResponse class is defined in a file named userResponse.ts
+import { userResponse } from "../api/response/userResponse";
 
 export class UserService {
     async createUser(username: string, password: string, email: string): Promise<userResponse> {

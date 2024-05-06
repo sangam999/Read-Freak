@@ -1,12 +1,7 @@
 import booksModel from '../model/schema/BooksSchema';
 import IBooksPage from '../interfaces/IBooksPage';
-import wishListsModel from '../model/schema/WishLists'
 import {Homepage} from '../api/response/homepage';
-import {AddWishlist, WishList, WishListSection} from "../api/response/WishList";
 import {Recommendation} from '../api/response/Recommendation';
-import IWishLists from "../interfaces/IWishLists";
-import wishLists from "../model/schema/WishLists";
-import userSchema from "../model/schema/userSchema";
 
 export class HomepageServices {
 
@@ -39,33 +34,6 @@ export class HomepageServices {
         }
     }
 
-    async getWishLists(userId: string): Promise<WishListSection> {
-        try {
-            const wishListData: IWishLists[] = await wishListsModel.find({ userId: userId });
-            const addWishList: AddWishlist = new AddWishlist('Add WishList', 'http://localhost:3000/addwishlist');
-
-            const wishLists: WishList[] = [];
-
-            for (const wishListItem of wishListData) {
-                const wishList: WishList = new WishList(
-                    wishListItem.bookId,
-                    wishListItem.userId,
-                    wishListItem.title,
-                    wishListItem.author,
-                    wishListItem.genre,
-
-                );
-                wishLists.push(wishList);
-            }
-
-            const wishListSection: WishListSection = new WishListSection(wishLists,addWishList);
-
-            return wishListSection;
-        } catch (error) {
-            console.error("Error fetching wishlists:", error);
-            throw new Error("Failed to fetch wishlists");
-        }
-    }
 
 
 }

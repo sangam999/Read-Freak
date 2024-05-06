@@ -1,6 +1,6 @@
 import IHomePage from "../../interfaces/Ihomepage";
 import mongoose, { Model } from "mongoose";
-import {banner} from "../../api/response/banner";
+
 
 
 

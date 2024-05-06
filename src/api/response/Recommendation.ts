@@ -1,6 +1,6 @@
 import IBooksPage from "../../interfaces/IBooksPage";
 
-export class Recommendation {
+export class  Recommendation {
     title: string;
     author:string;
     genre:string;

@@ -15,16 +15,7 @@ export default (app: Router) => {
             res.json({message: (err as Error).message});
         }
     });
-    app.get('/wishlists/:id', async (req, res) => {
-        try {
-            const id = req.params.id;
-            const wishLists = await homepageServices.getWishLists(id);
-            res.json(wishLists);
-        } catch (err) {
-            // @ts-ignore
-            res.status(500).json({ error: err.message });
-        }
-    });
+
 
 }
 

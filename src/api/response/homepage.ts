@@ -1,5 +1,5 @@
 import {Recommendation} from "./Recommendation";
-import {WishList} from "./WishList";
+
 
 
 export class Homepage {

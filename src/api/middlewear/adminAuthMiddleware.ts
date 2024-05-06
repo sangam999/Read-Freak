@@ -1,6 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { AuthService } from "../../services/authServices";
-import { ReqWithUser } from "../../interfaces/Ireq";
 import jwt from "jsonwebtoken";
 import config from "../../config/config";
 import {IUser} from "../../interfaces/IUser";
@@ -27,7 +26,7 @@ export const adminAuthMiddleware = async (req:Request, res: Response, next: Next
     }
 };
 
-// Error Handler Middleware
+
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(err);
     res.status(500).json({ error: err.message || 'Internal Server Error' }); // Handle error message properly

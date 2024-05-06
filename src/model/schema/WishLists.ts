@@ -1,21 +1,16 @@
-import IHomePage from "../../interfaces/Ihomepage";
+
 import mongoose, { Model } from "mongoose";
+import IWishLists from "../../interfaces/IWishLists";
 
 
 
-const { Schema, model } = require("mongoose");
+const { Schema,model } = require("mongoose");
 
 const wishListsSchema = new Schema(
     {
 
-        book_Id :{
-            type: String,
-            requried: true
-        },
-        user_Id: {
-            type: String,
-            required: true,
-        },
+        book_Id :String,
+        user_Id: String,
         title: {
             type: String,
             required: true,
@@ -29,6 +24,6 @@ const wishListsSchema = new Schema(
             required : true,
         }
     },)
-const wishListsModel: Model<IHomePage> = mongoose.model<IHomePage>('wishLists', wishListsSchema);
+const wishListsModel: Model<IWishLists> = mongoose.model<IWishLists>('wishLists', wishListsSchema);
 
 export default wishListsModel;
