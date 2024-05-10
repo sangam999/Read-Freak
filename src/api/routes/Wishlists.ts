@@ -10,9 +10,11 @@ export default (app: Router) => {
     const wishlists = new wishlistsServices();
 
     // Endpoint to get wishlist by user ID
-    app.get('/wishlist/:id', async (req: Request, res: Response) => {
+    app.get('/wishlist/:userId', async (req: Request, res: Response) => {
         try {
-            const userId= req.params.userId;
+            const userId = req.params.userId;
+
+            // Retrieve the user's wishlist
             const wishlist = await wishlists.getWishListbyId(userId);
 
             if (!wishlist) {
@@ -25,6 +27,9 @@ export default (app: Router) => {
             res.status(500).json({ error: 'Failed to fetch wishlist items' });
         }
     });
+
+
+
 
     // Endpoint to add a wishlist item
     app.post('/addwishlist', async (req: Request, res: Response) => {

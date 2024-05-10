@@ -1,5 +1,5 @@
 const baseUrl = "http://localhost:3000/";
-const endpoint = "getAllBooks";
+const endpoint = "deleteWishlist";
 
 export class WishList {
     bookId: string;
@@ -7,6 +7,7 @@ export class WishList {
     title: string;
     author: string;
     genre: string;
+    delete: string;
 
 
     constructor(
@@ -22,6 +23,7 @@ export class WishList {
         this.title = title;
         this.author = author;
         this.genre = genre;
+        this.delete = baseUrl + endpoint + bookId;
 
     }
 }
