@@ -31,12 +31,7 @@ export default (app: Router) => {
         const { userId, bookId, title, author, genre } = req.body;
 
         try {
-            const existingWishListItem = await wishListsModel.findOne({ userId, bookId });
-            if (existingWishListItem) {
-                return res.status(400).json({ error: 'Book already exists in the wishlist' });
-            }
-
-            // If the book does not exist, add it to the wishlist
+            // Add the book to the wishlist
             await wishlists.addWishList(userId, bookId, title, author, genre);
             res.status(201).json({ message: 'Wishlist item added successfully' });
         } catch (error) {
@@ -44,4 +39,5 @@ export default (app: Router) => {
             res.status(500).json({ error: 'Failed to add wishlist item' });
         }
     });
+
 };
