@@ -1,6 +1,7 @@
 import wishListsModel from "../model/schema/WishLists";
 import {AddWishlist, WishList, WishListSection} from "../api/response/WishList";
 import IWishLists from "../interfaces/IWishLists";
+import wishlists from "../api/routes/Wishlists";
 
 export class wishlistsServices {
     async getWishListbyId(userId: string): Promise<WishListSection> {
@@ -55,6 +56,8 @@ export class wishlistsServices {
             throw new Error("Failed to add wishlist");
         }
     }
+
+
 
 
 }

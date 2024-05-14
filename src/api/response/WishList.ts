@@ -1,5 +1,5 @@
 const baseUrl = "http://localhost:3000/";
-const endpoint = "deleteWishlist";
+const endpoint = "delete";
 
 export class WishList {
     bookId: string;
