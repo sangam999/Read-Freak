@@ -8,7 +8,7 @@ export class HomepageServices {
     async getHomepage(userId: string, recentlyViewed?: IBooksPage[]) {
         try {
             const recommendation = await this.getRecommendation();
-            const banner = 'Greetings';
+            const banner = 'hello Doe';
 
             // Removing wishlists from the method
             const response: Homepage = new Homepage(banner, recommendation);

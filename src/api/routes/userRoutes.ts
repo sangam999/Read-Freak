@@ -27,7 +27,7 @@ export default (app: Router) => {
         }
         try {
             // Call the login function from authService
-            const tokenData = await authService.login(email, password, res);
+            const tokenData = await authService.login(email, password);
             // If login is successful, token will be set in cookies automatically
             res.json(tokenData);
         } catch (error) {

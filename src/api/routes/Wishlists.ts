@@ -1,9 +1,9 @@
 import  { Router, Request, Response } from 'express';
-import { wishlistsServices } from '../../services/wishlistsServices';
+import {wishlistsServices} from '../../services/wishlistsServices';
 import wishListsModel from "../../model/schema/WishLists";
 import wishLists from "../../model/schema/WishLists";
 import WishLists from "../../model/schema/WishLists";
-import IWishLists from "../../interfaces/IWishLists"; // Importing wishListsModel
+import {auth} from "../middlewear/Auth"; // Importing wishListsModel
 // Remove redundant import: import wishLists from "../../model/schema/WishLists";
 
 export default (app: Router) => {
@@ -15,34 +15,48 @@ export default (app: Router) => {
             const userId = req.params.userId;
 
             // Retrieve the user's wishlist
-            const wishlist = await wishlists.getWishListbyId(userId);
+            const wishlist = await wishlists.getWishListById(userId);
 
             if (!wishlist) {
-                return res.status(404).json({ error: 'Wishlist not found for the user ID' });
+                return res.status(404).json({error: 'Wishlist not found for the user ID'});
             }
 
             res.json(wishlist);
         } catch (error) {
             console.error("Error fetching wishlist items:", error);
-            res.status(500).json({ error: 'Failed to fetch wishlist items' });
+            res.status(500).json({error: 'Failed to fetch wishlist items'});
         }
     });
-
-
 
 
     // Endpoint to add a wishlist item
-    app.post('/addwishlist', async (req: Request, res: Response) => {
-        const { userId, bookId, title, author, genre } = req.body;
-
+    app.get('/addwishlist/:bookId', auth, async (req, res) => {
         try {
-            // Add the book to the wishlist
-            await wishlists.addWishList(userId, bookId, title, author, genre);
-            res.status(201).json({ message: 'Wishlist item added successfully' });
+
+            // Call the addWishList function with provided data and wishListsModel
+            await wishlists.addWishList(req.params.bookId, req.user._id);
+
+            // Respond with success message
+            res.status(200).json({message: "Wishlist added successfully"});
         } catch (error) {
-            console.error("Error adding wishlist item:", error);
-            res.status(500).json({ error: 'Failed to add wishlist item' });
+            // If an error occurs, respond with an error message
+            console.error("Error adding wishlist:", error);
+            res.status(500).json({error: "Failed to add wishlist"});
         }
     });
 
-};
+    app.delete('/removewishlist/:bookId', auth, async (req, res) => {
+        try {
+
+            // Call the removeWishlist function with provided data
+            await wishlists.removeWishlist(req.params.bookId, req.user._id);
+
+            // Respond with success message
+            res.status(200).json({message: 'Book removed from wishlist'});
+        } catch (error) {
+            // If an error occurs, respond with an error message
+            console.error('Error removing book from wishlist:', error);
+            res.status(500).json({message: 'Failed to remove book from wishlist'});
+        }
+    });
+}

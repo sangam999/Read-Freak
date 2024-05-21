@@ -1,32 +1,29 @@
 const baseUrl = "http://localhost:3000/";
-const endpoint = "delete";
+const endpoint = "remove";
 
 export class WishList {
-    bookId: string;
-    userId: string;
     title: string;
     author: string;
     genre: string;
-    delete: string;
-
+    remove?: string ;
 
     constructor(
-        bookId: string,
-        userId: string,
         title: string,
         author: string,
         genre: string,
+        isUser: boolean,
+        bookId:string
 
     ) {
-        this.bookId = bookId;
-        this.userId = userId;
         this.title = title;
         this.author = author;
         this.genre = genre;
-        this.delete = baseUrl + endpoint + bookId;
-
+        if (isUser) {
+            this.remove = `${baseUrl}${endpoint}/${bookId}`;
+        }
     }
 }
+
 export class Button {
     type: string;
     link: string;
@@ -36,31 +33,14 @@ export class Button {
         this.link = link;
     }
 }
-export class AddWishlist{
-    text: string;
-    link:string;
-    button?:Button
 
-    constructor(
-        text: string,
-        link:string,
-        button?: Button
-    ) {
-        this.text = text;
-        this.link = link;
-        this.button = button;
-    }
-}
 export class WishListSection {
-    WishList: WishList[];
-    button?: AddWishlist | undefined;
+    wishList: WishList[];
 
     constructor(
-        WishList: WishList[],
-        button?: AddWishlist
+        wishList: WishList[],
     ) {
-        this.WishList = WishList;
-        this.button = button;
+        this.wishList = wishList;
     }
-
 }
+

@@ -1,17 +1,17 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import {IUser} from "../interfaces/IUser";
+import { Request, Response } from 'express';
+import { IUser } from "../interfaces/IUser";
 import UserSchema from "../model/schema/userSchema";
-import { Response } from 'express';
 
 const JWT_SECRET = "your-secret-key";
 
 export class AuthService {
-    async signUp(username: string, password: string, email: string) {
+    async signUp(username: string, password: string, email: string): Promise<IUser> {
         try {
-            const genRanHex = this.hexaIdgen(16);
+            const genRanHex = this.hexIdGenerator(16);
             const hashedPassword = await bcrypt.hash(password, 10);
-            const user: { password: string; role: string; name: string; _id: string; email: string, isActive: true } = {
+            const user: IUser = {
                 _id: genRanHex,
                 name: username,
                 email: email,
@@ -23,20 +23,21 @@ export class AuthService {
             const insertedUser = await UserSchema.create(user);
             return insertedUser;
         } catch (err) {
-            console.error(err);
+            console.error("Error signing up:", err);
             throw new Error("Error signing up");
         }
     }
 
-    hexaIdgen(size: number) {
+    hexIdGenerator(size: number): string {
         return [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
     }
 
-    async  login(email: string, password: string, res: Response) {
+
+    async login(email: string, password: string): Promise<{ token: string, _id: string, name: string, role: string }> {
         try {
-            const user: IUser | null = await UserSchema.findOne({ email: email });
+            const user: IUser | null = await UserSchema.findOne({email: email});
             if (!user) {
-                throw new Error("Invalid username");
+                throw new Error("Invalid email");
             }
 
             const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -49,48 +50,38 @@ export class AuthService {
                 name: user.name,
                 email: email,
                 role: user.role
-            }, JWT_SECRET, { expiresIn: '4h' });
+            }, JWT_SECRET, {expiresIn: '4h'});
 
-            // Set the token in cookies in the response headers
-            res.cookie('token', token, {
-                httpOnly: true,
-                maxAge: 4 * 60 * 60 * 1000 // 4 hours in milliseconds
-            });
-
-            // Return token along with user ID and name
             return {
                 token,
                 _id: user._id,
                 name: user.name,
                 role: user.role
-
             };
         } catch (error) {
-            console.error(error);
+            console.error("Error logging in:", error);
             throw new Error("Error logging in");
         }
     }
 
-     async logOut(): Promise<string> {
+
+    async logOut(req: Request, res: Response): Promise<void> {
         try {
-            // Generate a token with an expiration date in the past
-            const expiredToken = jwt.sign({ _id: 'user.id', name: 'user.name', email: 'user.email', role: 'user.role' }, JWT_SECRET, { expiresIn: 0 });
-            return expiredToken;
+            // Clear the token cookie
+            res.clearCookie('token');
         } catch (error) {
             console.error("Error logging out:", error);
             throw new Error("Error logging out");
         }
     }
 
-    async verifyToken(token: string) {
+    async verifyToken(token: string): Promise<IUser> {
         try {
             const decodedToken = jwt.verify(token, JWT_SECRET) as IUser;
             return decodedToken;
         } catch (error) {
-            console.error(error);
+            console.error("Invalid token:", error);
             throw new Error("Invalid token");
         }
     }
-
-
 }

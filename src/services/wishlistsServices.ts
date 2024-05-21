@@ -1,33 +1,49 @@
-import wishListsModel from "../model/schema/WishLists";
-import {AddWishlist, WishList, WishListSection} from "../api/response/WishList";
-import IWishLists from "../interfaces/IWishLists";
-import wishlists from "../api/routes/Wishlists";
+import  wishListsModel from "../model/schema/WishLists"; // Corrected import statement
+
+import { WishList, WishListSection } from "../api/response/WishList";
+import BooksSchema from "../model/schema/BooksSchema";
+import { IWishLists } from "../interfaces/IWishLists";
 
 export class wishlistsServices {
-    async getWishListbyId(userId: string): Promise<WishListSection> {
+    async getWishListById(userId: string): Promise<WishListSection> {
         try {
             // Find wishlists for the given userId
-            const wishListData: IWishLists[] = await wishListsModel.find({userId});
+            const wishListData = await wishListsModel.findOne({userId: userId});
+
+            if (!wishListData) {
+                throw new Error("No wishlist found for the user");
+            }
 
             const wishLists: WishList[] = [];
+            const isUser = true;
+            const baseUrl = 'http://localhost:3000';
+            const endpoint = '/removewishlist';
 
-            // Iterate over each wish list item and create a WishList object
-            for (const wishListItem of wishListData) {
+            // Iterate over each wish list item
+            for (const wishListItem of wishListData.wishlists) {
+                // Fetch book data for the current wishlist item's bookId
+                const book = await BooksSchema.findById(wishListItem);
+
+                // If book not found, skip adding to the wishlist
+                if (!book) {
+                    console.error(`Book not found for bookId: ${wishListItem}`);
+                    continue;
+                }
+
+                // Create a WishList object using book data
                 const wishList: WishList = new WishList(
-                    wishListItem.bookId,
-                    wishListItem.userId,
-                    wishListItem.title,
-                    wishListItem.author,
-                    wishListItem.genre
+                    book.title,
+                    book.author,
+                    book.genre,
+                    isUser,
+                    baseUrl,
                 );
+
                 wishLists.push(wishList);
             }
 
-            // Create a new AddWishlist object (assuming it's necessary)
-            const addWishList: AddWishlist = new AddWishlist('Add WishList', 'http://localhost:3000/addwishlist');
-
-            // Create a WishListSection object with the wishLists array and addWishList object
-            const wishListSection: WishListSection = new WishListSection(wishLists, addWishList);
+            // Create a WishListSection object with the wishLists array
+            const wishListSection: WishListSection = new WishListSection(wishLists);
 
             return wishListSection;
         } catch (error) {
@@ -36,19 +52,30 @@ export class wishlistsServices {
         }
     }
 
-    async addWishList(userId: string, bookId: string, title: string, author: string, genre: string){
+    async addWishList(bookId: string, userId: string) {
         try {
+            // Find the wishlist entry for the user
+            let wishlistEntry = await wishListsModel.countDocuments({userId: userId});
 
-            const newWishListData: IWishLists = {
-                userId: userId,
-                bookId: bookId,
-                title: title,
-                author: author,
-                genre: genre
-            };
+            // If the wishlist entry doesn't exist, create a new one
+            if (wishlistEntry ==0) {
+               await wishListsModel.create({userId: userId, wishlists: [bookId]});
+            } else {
+                // Ensure that the bookId is not already in the wishlist
 
+                // Add the new book to the wishlist
 
-            await wishListsModel.create(newWishListData);
+                await wishListsModel.updateOne({
+                    userId: userId
+                },
+                    {
+                        $push: {
+                            wishlists: bookId
+                        }
+                    })
+            }
+
+            // Save the updated or new wishlist entry
 
             console.log("Wishlist added successfully");
         } catch (error) {
@@ -57,9 +84,15 @@ export class wishlistsServices {
         }
     }
 
-
-
-
+    async removeWishlist(bookId: string, userId: string): Promise<void> {
+        try {
+            // Find the wishlist entry and remove the bookId from the wishlist array
+            await wishListsModel.updateOne({userId: userId}, {$pull: {wishlists: bookId}});
+            console.log("Book removed from wishlist successfully");
+        } catch (error) {
+            // Handle potential errors
+            console.error('Error removing book from wishlist:', error);
+            throw new Error('Could not remove book from wishlist');
+        }
+    }
 }
-
-

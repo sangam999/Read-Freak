@@ -18,8 +18,8 @@ export const adminAuthMiddleware = async (req:Request, res: Response, next: Next
         if (decodedToken.role != 'admin') {
             throw new Error('Unauthorized');
         }
-        // @ts-ignore
-        req.user = decodedToken; // Change decoded to decodedToken
+
+        req.user = decodedToken;
         next();
     } catch (error) {
         next(error);

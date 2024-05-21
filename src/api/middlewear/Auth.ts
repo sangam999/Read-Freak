@@ -14,8 +14,7 @@ export const auth = (req:Request, res: Response, next: NextFunction) => {
 
     try {
         const decoded = jwt.verify(token, config.JWT_KEY as string) as IUser;
-        // @ts-ignore
-        req.user = decoded;
+                req.user = decoded;
 
         next();
     } catch (error) {

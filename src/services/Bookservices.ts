@@ -6,21 +6,21 @@ import { AddBook, Book, BookSection } from "../api/response/Booksresponse";
 
 export class BookService {
 
-    async getallbooks(id: string): Promise<BookSection> {
+    async getallbooks(id: string, role?: string): Promise<BookSection> {
         try {
             const bookData: IBooksPage[] = await booksModel.find({ bookId: id });
+            const isAdmin = role === "admin"; // Determine if the user is an admin based on the role parameter
+            const isUser = true; // Assuming the user is always authenticated for this example
             const addBook: AddBook = new AddBook('Add Book', 'http://localhost:3000/addbooks');
 
             const books: Book[] = [];
 
             for (const bookInfo of bookData) {
-                const book: Book = new Book(bookInfo);
+                const book: Book = new Book(bookInfo, isAdmin, isUser);
                 books.push(book);
             }
 
             const bookSection: BookSection = new BookSection(books, addBook);
-
-
 
             return bookSection;
         } catch (error) {
@@ -29,7 +29,8 @@ export class BookService {
         }
     }
 
-    async  getBookById(id: string): Promise<Book> {
+
+    async getBookById(id: string): Promise<Book> {
         try {
             const bookData: IBooksPage | null = await booksModel.findOne({ _id: id });
 
@@ -37,16 +38,18 @@ export class BookService {
                 throw new Error("Book not found");
             }
 
-            const addBook: AddBook = new AddBook('Add Book', 'http://localhost:3000/addbooks');
-            const book: Book = new Book(bookData);
-            const bookSection: BookSection = new BookSection([book], addBook);
+            const isAdmin = true;  // Assuming you have logic to determine if the user is an admin
+            const isUser = true;   // Assuming the user is authenticated
 
-            return book ;
+            const book: Book = new Book(bookData, isAdmin, isUser);
+            return book;
         } catch (error) {
             console.error("Error fetching book:", error);
             throw new Error("Failed to fetch book");
         }
     }
+
+
 
 
 

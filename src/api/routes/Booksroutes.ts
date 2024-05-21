@@ -1,18 +1,20 @@
 import { Request, Response, Router } from 'express';
 import { BookService } from '../../services/Bookservices';
 import {auth} from "../middlewear/Auth";
-import {adminAuthMiddleware} from "../middlewear/adminAuthMiddleware";
 import IBooksPage from "../../interfaces/IBooksPage";
 import {BookSection} from "../response/Booksresponse";
 import booksModel from "../../model/schema/BooksSchema";
+import {IUser} from "../../interfaces/IUser";
+import {AuthService} from "../../services/authServices";
+import {adminAuthMiddleware} from "../middlewear/adminAuthMiddleware";
 
 const bookService = new BookService();
 
 export default (app: Router) => {
-    app.get('/getAllBooks', async (req: Request, res: Response) => {
+    app.get('/getAllBooks',auth, async (req: Request, res: Response) => {
         try {
-            const id: string = req.params.id; // Change to req.query.id if it's a query parameter
-            const booksData = await bookService.getallbooks(id);
+            const id: string = req.params.id
+            const booksData = await bookService.getallbooks(id,req.user.role);
 
             if (!booksData) {
                 res.status(404).json({message: 'Books not found'});
